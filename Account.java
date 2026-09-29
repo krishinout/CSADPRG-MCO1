@@ -1,12 +1,16 @@
-import java.util.*;
+
+/**
+ * Class represents the account of the user
+ * contains name, balance, and current currency (automatically php)
+ */
 
 public class Account{
     // Attributes
     private String accountName;
-    private double balance = 0;
+    private double balance = 0.0;
     private Currency currency = Currency.PHP;
 
-    private Account(String accountName, double balance){
+    public Account(String accountName, double balance){
         this.accountName = accountName;
         this.balance = balance;
     }
@@ -24,30 +28,32 @@ public class Account{
         return balance;
     }
 
+    public Currency getCurrency(){
+        return currency;
+    }
+
     // deposit function
-    public void deposit(){
+    public boolean deposit(double depositAmt){
 
-        Scanner sc = new Scanner(System.in);
-
-        System.out.println("Account Name: " + accountName);
-        System.out.printf("Current Balance: %.2f", balance);
-        System.out.println("Currency: " + currency);
-
-        try {
-            System.out.println("Deposite Amount: ");
-            double amount = sc.nextDouble();
-        } catch (InputMismatchException e) {
-            amount = 0;
-            System.out.println("Transaction Cancelled. Unable to Process Request.");
-
-        } finally {
-            System.out.printf("Updated Balance: %.2f\n", balance+amount);
+        if(depositAmt <= 0){
+            return false;
         }
 
-        sc.close();
+        this.balance += depositAmt;
+        return true;
     }
 
     // withdraw function
+    public boolean transact(double drawAmt){
+
+        if(drawAmt > this.balance){
+            return false;
+        }
+
+        this.balance -= drawAmt;
+        return true;
+    }
+
 
 
 }

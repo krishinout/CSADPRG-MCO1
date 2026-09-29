@@ -1,18 +1,22 @@
 import java.util.*;
 
-public class ExchangeRate {
-    // conversion and assignment of new rates
-    // implementation of an enum map, like an array of objects
-    // stores rates and does conversions
+/**
+ * This class is for the storage of rates and conversion of rates
+ * Makes use of an enum map, like a dictionary for easy storage and access of currency details
+ */
 
+public class ExchangeRate {
     /**
+     * NOTE:
      * Currency is like the type of enum class
      * double is the data type associated with each type
      */
     private final Map<Currency, Double> rates = new EnumMap<>(Currency.class);
 
-    // for recording exchange rate
-    // sets rate only when valid enum and valid rate
+    /**
+     * Sets the rate for each currency, and only returns true when successful
+     * Done for validation
+     */
     public boolean setRate(Currency currency, Double rate){
         if (currency == null || currency == Currency.PHP || rate <= 0){
             return false;
@@ -23,16 +27,20 @@ public class ExchangeRate {
         return true;
     }
 
-    // returns true if rate is in the map, false otherwise
+    /**
+     * Checks if a rating is set, calling before conversion
+     */
     public boolean ifRateExists(Currency currency){
         return currency == Currency.PHP || rates.containsKey(currency);
     }
 
-    // conversion
+    /**
+     * Conversion from one currency to another
+     */
     public double convert(double amount, Currency from, Currency to){
         double amountInPhp, convertedAmt;
 
-        if(from == to){
+        if(from == to){ // if base currency(PHP) return as is
             return round(amount);
         }
 
@@ -53,6 +61,7 @@ public class ExchangeRate {
         return round(convertedAmt);
     }
 
+    // might remove since it rounds the values
     private double round(double value) {
         return Math.round(value * 100.0) / 100.0;
     }
