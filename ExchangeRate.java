@@ -1,5 +1,4 @@
 import java.util.*;
-import java.math.*;
 
 public class ExchangeRate {
     // conversion and assignment of new rates
@@ -10,7 +9,7 @@ public class ExchangeRate {
      * Currency is like the type of enum class
      * double is the data type associated with each type
      */
-    private Map<Currency, Double> rates = new EnumMap<>(Currency.class);
+    private final Map<Currency, Double> rates = new EnumMap<>(Currency.class);
 
     // for recording exchange rate
     // sets rate only when valid enum and valid rate
