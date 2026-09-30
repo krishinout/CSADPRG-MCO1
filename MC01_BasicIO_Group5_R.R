@@ -35,3 +35,30 @@ main <- function(){
     }
 }
 
+#####################################
+# FUNCTIONS FOR CHOICES AND MAIN MENU
+showMenu <- function(){
+    cat("\n===================================")
+    cat("Select Transaction:\n")
+    cat("[1] Register Account Name\n")
+    cat("[2] Deposit Amount\n")
+    cat("[3] Withdraw Amount\n")
+    cat("[4] Currency Exchange\n")
+    cat("[5] Record Exchange Rates\n")
+    cat("[6] Show Interest Amount\n")
+
+    cat("\nChoice: ")
+}
+
+registerAccount <- function(){
+    cat("[REGISTER ACCOUNT NAME]\n")
+    print("Account Name: ")
+    accountName <- readline()
+
+    cat("\n***\n")
+    cat("Registered Account Name = ", accountName, "\n") #pede den gamitin paste
+    cat("***\n")
+
+    return(accountName)
+
+}
