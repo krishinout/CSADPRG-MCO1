@@ -62,3 +62,35 @@ registerAccount <- function(){
     return(accountName)
 
 }
+
+depositAmount <- function(accountName, balance){
+    cat("[DEPOSIT AMOUNT]\n")
+    cat("Account Name: ")
+    depositAccountName <- readline()
+
+    if (depositAccountName == accountName)
+    {
+        cat("Current Balance: ", balance, "\n")
+        cat("Currency: PHP\n")
+
+        cat("\nDeposit Amount: ")
+        depositAmount <- readline()
+        depositAmount <- as.numeric(depositAmount)
+        newBalance <- depositAmount + balance
+        
+        cat("\n***\n")
+        cat("Registered Account Name = ", accountName, "\n")
+        cat("Deposited Amount = ", depositAmount, "\n")
+        cat("Updated Balance = ", newBalance, "\n")
+        cat("***")
+        return(newBalance) #para maupdate balance sa main
+    }
+
+    # to be added deposit validation (e.g., negative amount)
+
+    else
+    {
+        cat("Error: Account name does not match records."\n)
+        return(balance) #no change sa balance
+    }
+}
