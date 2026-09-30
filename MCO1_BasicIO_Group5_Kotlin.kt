@@ -11,6 +11,7 @@
 fun main()
 {
     var accountName = ""
+    var balance = 0.0
 
     while (true)
     {
@@ -21,6 +22,7 @@ fun main()
         when (choice)
         {
             1 -> accountName = registerAccount()
+            2 -> balance = depositAmount(accountName, balance)
             else -> println("Error: Invalid choice")
         }
     }
@@ -53,4 +55,34 @@ fun registerAccount(): String
     println("***")
 
     return accountName
+}
+
+fun depositAmount(accountName: String, balance: Double): Double
+{    
+    println("[DEPOSIT AMOUNT]")
+    print("Account Name: ")
+    val depositAccountName = readln()
+
+    if (depositAccountName == accountName)
+    {
+        println("Current Balance: ${balance}")
+        println("Currency: PHP")
+
+        print("\nDeposit Amount: ")
+        val depositAmount = readln().toDouble()
+        val newBalance = depositAmount + balance
+        
+        println("\n***")
+        println("Registered Account Name = ${accountName}")
+        println("Deposited Amount = ${depositAmount}")
+        println("Updated Balance = ${newBalance}")
+        println("***")
+        return newBalance // para maupdate balance sa main
+    }
+
+    else
+    {
+        println("Error: Account name does not match records.")
+        return balance // no change sa balance
+    }
 }
