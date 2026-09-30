@@ -1,13 +1,13 @@
-/**
- * MCO Milestone 1: Basic I/O Operations in R
- * 
- * Last names: Danieles, De Guzman, Nono, Suazon
- * Language: R
- * Paradigm(s):
- */
+#
+# MCO Milestone 1: Basic I/O Operations in R
+# 
+# Last names: 
+# Language: R
+# Paradigm(s):
+#
 
-// ---------------------------------------
-// MAIN PROGRAM
+#####################################
+# MAIN PROGRAM
 main <- function(){
     accountName <- ""
     balance <- 0.0
@@ -34,3 +34,4 @@ main <- function(){
         }
     }
 }
+
