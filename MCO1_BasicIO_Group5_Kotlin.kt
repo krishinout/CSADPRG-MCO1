@@ -23,6 +23,7 @@ fun main()
         {
             1 -> accountName = registerAccount()
             2 -> balance = depositAmount(accountName, balance)
+            3 -> balance = withdrawAmount(accountName, balance)
             else -> println("Error: Invalid choice")
         }
     }
@@ -79,6 +80,40 @@ fun depositAmount(accountName: String, balance: Double): Double
         println("***")
         return newBalance // para maupdate balance sa main
     }
+
+    // to be added deposit validation (e.g., negative amount)
+
+    else
+    {
+        println("Error: Account name does not match records.")
+        return balance // no change sa balance
+    }
+}
+
+fun withdrawAmount(accountName: String, balance: Double): Double
+{    
+    println("[WITHDRAW AMOUNT]")
+    print("Account Name: ")
+    val withdrawAccountName = readln()
+
+    if (withdrawAccountName == accountName)
+    {
+        println("Current Balance: ${balance}")
+        println("Currency: PHP")
+
+        print("\nWithdraw Amount: ")
+        val withdrawAmount = readln().toDouble()
+        val newBalance = balance - withdrawAmount
+        
+        println("\n***")
+        println("Registered Account Name = ${accountName}")
+        println("Withdrawn Amount = ${withdrawAmount}")
+        println("Updated Balance = ${newBalance}")
+        println("***")
+        return newBalance // para maupdate balance sa main
+    }
+
+    // to be added withdrawal validation (e.g., insufficient funds)
 
     else
     {
