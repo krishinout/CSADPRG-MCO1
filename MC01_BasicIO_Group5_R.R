@@ -12,7 +12,7 @@ main <- function(){
     accountName <- ""
     balance <- 0.0
 
-    whie(True)
+    while(TRUE)
     {
         showMenu()
         choice <- readline()
@@ -38,7 +38,7 @@ main <- function(){
 #####################################
 # FUNCTIONS FOR CHOICES AND MAIN MENU
 showMenu <- function(){
-    cat("\n===================================")
+    cat("\n===================================\n")
     cat("Select Transaction:\n")
     cat("[1] Register Account Name\n")
     cat("[2] Deposit Amount\n")
@@ -52,7 +52,7 @@ showMenu <- function(){
 
 registerAccount <- function(){
     cat("[REGISTER ACCOUNT NAME]\n")
-    print("Account Name: ")
+    cat("Account Name: ")
     accountName <- readline()
 
     cat("\n***\n")
@@ -90,7 +90,42 @@ depositAmount <- function(accountName, balance){
 
     else
     {
-        cat("Error: Account name does not match records."\n)
+        cat("Error: Account name does not match records.\n")
         return(balance) #no change sa balance
     }
 }
+
+withdrawAmount <- function(accountName, balance) {
+    cat("[WITHDRAW AMOUNT]\n")
+    cat("Account Name: ")
+    withdrawAccountName <- readline()
+
+    if (withdrawAccountName == accountName)
+    {
+        cat("Current Balance:", balance, "\n")
+        cat("Currency: PHP\n")
+
+        cat("\nWithdraw Amount: ")
+        withdrawAmount <- readline()
+        withdrawAmount <- as.numeric(withdrawAmount)
+
+        newBalance <- balance - withdrawAmount
+        
+        cat("\n***\n")
+        cat("Registered Account Name =", accountName, "\n")
+        cat("Withdrawn Amount = ", withdrawAmount, "\n")
+        cat("Updated Balance = ", newBalance, "\n")
+        cat("***\n")
+        return(newBalance) # para maupdate balance sa main
+    }
+
+    # to be added withdrawal validation (e.g., insufficient funds)
+
+    else
+    {
+        cat("Error: Account name does not match records.\n")
+        return(balance) #no change sa balance
+    }
+}
+
+main()
