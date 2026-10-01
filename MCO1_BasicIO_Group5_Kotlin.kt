@@ -24,6 +24,7 @@ fun main()
             1 -> accountName = registerAccount()
             2 -> balance = depositAmount(accountName, balance)
             3 -> balance = withdrawAmount(accountName, balance)
+            5 -> recordExchange()
             else -> println("Error: Invalid choice")
         }
     }
@@ -120,4 +121,36 @@ fun withdrawAmount(accountName: String, balance: Double): Double
         println("Error: Account name does not match records.")
         return balance // no change sa balance
     }
+}
+
+fun recordExchange()
+{
+    println("[RECORD EXCHANGE RATE]\n")
+
+    println("[1] Philippine Peso (PHP)")
+    println("[2] United States Dollar (USD)")
+    println("[3] Japanese Yen (JPY)")
+    println("[4] British Pound Sterling (GBP)")
+    println("[5] Euro (EUR)")
+    println("[6] Chinese Yuan Renminni (CNY)\n")
+
+    print("Select Foreign Currency: ")
+    val choice = readln().toInt()
+
+    var rate = 1.00
+    when (choice)
+    {
+        1 -> rate = rate
+        2 -> rate = 62.00
+        3 -> rate = 0.40
+        4 -> rate = 84.00
+        5 -> rate = 72.00
+        6 -> rate = 9.00
+        else -> println("Error: Invalid choice.")
+    }
+
+    println("\n***")
+    println("Selected Foreign Currency = [${choice}]")
+    println("Exchange Rate: ${String.format("%.2f", rate)}")
+    println("***")
 }
