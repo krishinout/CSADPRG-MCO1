@@ -24,6 +24,7 @@ fun main()
             1 -> accountName = registerAccount()
             2 -> balance = depositAmount(accountName, balance)
             3 -> balance = withdrawAmount(accountName, balance)
+            4 -> currencyExchange()
             5 -> recordExchange()
             else -> println("Error: Invalid choice")
         }
@@ -34,7 +35,7 @@ fun main()
 // FUNCTIONS FOR CHOICES AND MAIN MENU
 fun showMenu()
 {
-    println("\n===================================")
+    println("\n===================================\n")
     println("Select Transaction:")
     println("[1] Register Account Name")
     println("[2] Deposit Amount")
@@ -121,6 +122,26 @@ fun withdrawAmount(accountName: String, balance: Double): Double
         println("Error: Account name does not match records.")
         return balance // no change sa balance
     }
+}
+
+fun currencyExchange()
+{
+    println("[FOREIGN CURRENCY EXCHANGE]")
+    print("Source Amount (PHP): ")
+    val amount = readln().toDouble()
+
+    println("\nExchanged Currency")
+    println("[1] Philippine Peso (PHP) = ${String.format("%.2f", 1 * amount)}")
+    println("[2] United States Dollar (USD) = ${String.format("%.2f", 62 * amount)}")
+    println("[3] Japanese Yen (JPY) = ${String.format("%.2f", 0.4 * amount)}")
+    println("[4] British Pound Sterling (GBP) = ${String.format("%.2f", 84 * amount)}")
+    println("[5] Euro (EUR) = ${String.format("%.2f", 72 * amount)}")
+    println("[6] Chinese Yuan Renminbi (CNY) = ${String.format("%.2f", 9 * amount)}")
+
+    println("\n***")
+    println("Source Currency = Philippine Peso (PHP)")
+    println("Source Amount (PHP) = ${amount}")
+    println("***")
 }
 
 fun recordExchange()
