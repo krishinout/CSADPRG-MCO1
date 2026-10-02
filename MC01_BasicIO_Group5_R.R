@@ -22,14 +22,15 @@ main <- function(){
         # WALA ATANG SWITCH CASE SA R?? check q mmya..
         if(choice == 1){
             accountName <- registerAccount()
-        } 
-        else if(choice == 2){
+        } else if(choice == 2){
             balance <- depositAmount(accountName, balance)
-        }
-        else if(choice == 3){
+        } else if(choice == 3){
             balance <- withdrawAmount(accountName, balance)
-        }
-        else{
+        }else if(choice == 4){
+            currencyExchange()
+        } else if(choice == 5){
+            recordExchange()
+        } else{
             cat("Error: Invalid choice")
         }
     }
@@ -138,6 +139,49 @@ currencyExchange <- function()
     cat("Source Currency = Philippine Peso (PHP)\n")
     cat("Source Amount (PHP) = ", amount, "\n")
     println("***\n")
+}
+
+recordExchange <- function()
+{
+    cat("[RECORD EXCHANGE RATE]\n\n")
+    cat("[1] Philippine Peso (PHP)\n")
+    cat("[2] United States Dollar (USD)\n")
+    cat("[3] Japanese Yen (JPY)\n")
+    cat("[4] British Pound Sterling (GBP)\n")
+    cat("[5] Euro (EUR)\n")
+    cat("[6] Chinese Yuan Renminni (CNY)\n\n")
+
+    choice <- readln("Select Foreign Currency: ")
+    choice <- as.integer(choice)
+
+    rate <- 1.00
+
+    if (choice == 1) {
+        rate <- 1.00
+    } 
+    else if (choice == 2) {
+        rate <- 62.00
+
+    } else if (choice == 3) {
+        rate <- 0.40
+
+    } else if (choice == 4) {
+        rate <- 84.00
+
+    } else if (choice == 5) {
+        rate <- 72.00
+
+    } else if (choice == 6) {
+        rate <- 9.00
+
+    } else {
+        cat("Error: Invalid choice.\n")
+    }
+
+    cat()("\n***\n")
+    cat()("Selected Foreign Currency = ", choice, "\n")
+    cat()("Exchange Rate: ", sprintf("%.2f", rate), "\n")
+    cat()("***\n")
 }
 
 main()
