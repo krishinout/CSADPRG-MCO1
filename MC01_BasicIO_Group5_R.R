@@ -1,7 +1,7 @@
 #
 # MCO Milestone 1: Basic I/O Operations in R
 # 
-# Last names: 
+# Last names: Danieles, De Guzman, Nono, Suazon
 # Language: R
 # Paradigm(s):
 #
@@ -15,7 +15,7 @@ main <- function(){
     while(TRUE)
     {
         showMenu()
-        choice <- readline()
+        choice <- readline("choice: ")
         choice <- as.integer(choice)
         cat("===================================\n")
 
@@ -46,17 +46,14 @@ showMenu <- function(){
     cat("[4] Currency Exchange\n")
     cat("[5] Record Exchange Rates\n")
     cat("[6] Show Interest Amount\n")
-
-    cat("\nChoice: ")
 }
 
 registerAccount <- function(){
     cat("[REGISTER ACCOUNT NAME]\n")
-    cat("Account Name: ")
-    accountName <- readline()
+    accountName <- readline("Account Name: ")
 
     cat("\n***\n")
-    cat("Registered Account Name = ", accountName, "\n") #pede den gamitin paste
+    cat("Registered Account Name = ", accountName, "\n")
     cat("***\n")
 
     return(accountName)
@@ -65,16 +62,13 @@ registerAccount <- function(){
 
 depositAmount <- function(accountName, balance){
     cat("[DEPOSIT AMOUNT]\n")
-    cat("Account Name: ")
-    depositAccountName <- readline()
+    depositAccountName <- readline("Account Name: ")
 
     if (depositAccountName == accountName)
     {
         cat("Current Balance: ", balance, "\n")
         cat("Currency: PHP\n")
-
-        cat("\nDeposit Amount: ")
-        depositAmount <- readline()
+        depositAmount <- readline("\nDeposit Amount: ")
         depositAmount <- as.numeric(depositAmount)
         newBalance <- depositAmount + balance
         
@@ -82,7 +76,7 @@ depositAmount <- function(accountName, balance){
         cat("Registered Account Name = ", accountName, "\n")
         cat("Deposited Amount = ", depositAmount, "\n")
         cat("Updated Balance = ", newBalance, "\n")
-        cat("***")
+        cat("***\n")
         return(newBalance) #para maupdate balance sa main
     }
 
@@ -97,22 +91,19 @@ depositAmount <- function(accountName, balance){
 
 withdrawAmount <- function(accountName, balance) {
     cat("[WITHDRAW AMOUNT]\n")
-    cat("Account Name: ")
-    withdrawAccountName <- readline()
+    withdrawAccountName <- readline("Account Name: ")
 
     if (withdrawAccountName == accountName)
     {
         cat("Current Balance:", balance, "\n")
         cat("Currency: PHP\n")
 
-        cat("\nWithdraw Amount: ")
-        withdrawAmount <- readline()
+        withdrawAmount <- readline("\nWithdraw Amount: ")
         withdrawAmount <- as.numeric(withdrawAmount)
-
         newBalance <- balance - withdrawAmount
         
         cat("\n***\n")
-        cat("Registered Account Name =", accountName, "\n")
+        cat("Registered Account Name = ", accountName, "\n")
         cat("Withdrawn Amount = ", withdrawAmount, "\n")
         cat("Updated Balance = ", newBalance, "\n")
         cat("***\n")
@@ -124,7 +115,7 @@ withdrawAmount <- function(accountName, balance) {
     else
     {
         cat("Error: Account name does not match records.\n")
-        return(balance) #no change sa balance
+        return(balance) # no change sa balance
     }
 }
 
