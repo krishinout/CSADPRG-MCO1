@@ -51,7 +51,7 @@ depositAmount <- function(accountName, balance) {
     cat("[DEPOSIT AMOUNT]\n")
     depositAccountName <- readline("Account Name: ")
 
-    cat("Current Balance:", balance, "\n")
+    cat("Current Balance:", sprintf("%.2f", balance), "\n")
     cat("Currency: PHP\n")
 
     depositAmount <- readline("\nDeposit Amount: ")
@@ -60,8 +60,8 @@ depositAmount <- function(accountName, balance) {
 
     cat("\n***\n")
     cat("Registered Account Name =", depositAccountName, "\n")
-    cat("Deposited Amount =", depositAmount, "\n")
-    cat("Updated Balance =", newBalance, "\n")
+    cat("Deposited Amount =", sprintf("%.2f", depositAmount), "\n")
+    cat("Updated Balance =", sprintf("%.2f", newBalance), "\n")
     cat("***\n\n")
 
     return(newBalance)
@@ -71,7 +71,7 @@ withdrawAmount <- function(accountName, balance) {
     cat("[WITHDRAW AMOUNT]\n")
     withdrawAccountName <- readline("Account Name: ")
 
-    cat("Current Balance:", balance, "\n")
+    cat("Current Balance:", sprintf("%.2f", balance), "\n")
     cat("Currency: PHP\n")
 
     withdrawAmount <- readline("\nWithdraw Amount: ")
@@ -80,8 +80,8 @@ withdrawAmount <- function(accountName, balance) {
 
     cat("\n***\n")
     cat("Registered Account Name =", withdrawAccountName, "\n")
-    cat("Withdrawn Amount =", withdrawAmount, "\n")
-    cat("Updated Balance =", newBalance, "\n")
+    cat("Withdrawn Amount =", sprintf("%.2f", withdrawAmount), "\n")
+    cat("Updated Balance =", sprintf("%.2f", newBalance), "\n")
     cat("***\n\n")
 
     return(newBalance)
@@ -104,7 +104,7 @@ currencyExchange <- function()
     
     cat("\n***\n")
     cat("Source Currency = Philippine Peso (PHP)\n")
-    cat("Source Amount (PHP) =", amount, "\n")
+    cat("Source Amount (PHP) =", sprintf("%.2f", amount), "\n")
     cat("***\n\n")
 }
 
