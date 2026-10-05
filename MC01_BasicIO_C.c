@@ -41,13 +41,13 @@ void showMenu(){
     printf("[3] Withdraw Amount\n");
     printf("[4] Currency Exchange\n");
     printf("[5] Record Exchange Rates\n");
-    printf("[6] Show Interest Amount\n");
+    printf("[6] Show Interest Amount\n\n");
 
     printf("Choice: ");
     scanf("%d", &choice);
     getchar();
 
-    printf("***\n");
+    printf("\n***\n");
     printf("Choice = %d\n\n", choice);
 }
 
@@ -58,7 +58,7 @@ void registerAccountName(char* accountName){
     fgets(accountName, MAX_NAME, stdin);
     accountName[strcspn(accountName, "\n")] = '\0';
 
-    printf("***\n");
+    printf("\n***\n");
     printf("Account Name = %s\n\n", accountName);
 
 }
@@ -74,13 +74,13 @@ void depositAmount(char* accountName){
     inputName[strcspn(inputName, "\n")] = '\0';
 
     printf("Current Balance: %.2f\n", DEFAULT_BALANCE);
-    printf("Currency: PHP\n");
+    printf("Currency: PHP\n\n");
 
     printf("Deposit Amount: ");
     scanf("%lf", &deposit);
     getchar();
 
-    printf("***\n");
+    printf("\n***\n");
     printf("Account Name = %s\n", inputName);
     printf("Deposit Amount = %.2f\n\n", deposit);
 }
@@ -96,13 +96,13 @@ void withdrawAmount(char* accountName){
     inputName[strcspn(inputName, "\n")] = '\0';
 
     printf("Current Balance: %.2f\n", DEFAULT_BALANCE);
-    printf("Currency: PHP\n");
+    printf("Currency: PHP\n\n");
 
     printf("Withdraw Amount: ");
     scanf("%lf", &withdraw);
     getchar();
 
-    printf("***\n");
+    printf("\n***\n");
     printf("Account Name = %s\n", inputName);
     printf("Withdraw Amount = %.2f\n\n", withdraw);  
     
