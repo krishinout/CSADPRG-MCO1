@@ -11,6 +11,11 @@
 main <- function(){
 
     showMenu()
+    choice <- readline("choice: ")
+    choice <- as.integer(choice)
+    cat("===================================\n\n")
+    cat("***\n")
+    cat("choice =", choice, "\n\n")    
 
     accountName <- registerAccount()
     balance <- 0.0
@@ -31,8 +36,8 @@ showMenu <- function(){
     cat("[3] Withdraw Amount\n")
     cat("[4] Currency Exchange\n")
     cat("[5] Record Exchange Rates\n")
-    cat("[6] Show Interest Amount\n")
-    cat("\n===================================\n")
+    cat("[6] Show Interest Amount\n\n")
+
 }
 
 registerAccount <- function(){
@@ -41,7 +46,7 @@ registerAccount <- function(){
 
     cat("\n***\n")
     cat("Registered Account Name =", accountName, "\n")
-    cat("***\n")
+    cat("***\n\n")
 
     return(accountName)
 
