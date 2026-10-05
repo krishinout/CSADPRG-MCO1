@@ -9,141 +9,107 @@
 #####################################
 # MAIN PROGRAM
 main <- function(){
-    accountName <- ""
-    balance <- 0.0
 
-    while(TRUE)
-    {
-        showMenu()
-        choice <- readline("choice: ")
-        choice <- as.integer(choice)
-        cat("===================================\n")
+    showMenu()
+    choice <- readline("Choice: ")
+    choice <- as.integer(choice)
+    cat("\n***\n")
+    cat("Choice =", choice, "\n\n")    
 
-        # WALA ATANG SWITCH CASE SA R?? check q mmya..
-        if(choice == 1){
-            accountName <- registerAccount()
-        } else if(choice == 2){
-            balance <- depositAmount(accountName, balance)
-        } else if(choice == 3){
-            balance <- withdrawAmount(accountName, balance)
-        }else if(choice == 4){
-            currencyExchange()
-        } else if(choice == 5){
-            recordExchange()
-        } else{
-            cat("Error: Invalid choice")
-        }
-    }
+    accountName <- registerAccount()
+    balance <- 1000.0
+
+    balance <- depositAmount(accountName, balance)
+    balance <- withdrawAmount(accountName, balance)
+    recordExchange()
+    currencyExchange()
 }
 
 #####################################
 # FUNCTIONS FOR CHOICES AND MAIN MENU
 showMenu <- function(){
-    cat("\n===================================\n")
     cat("Select Transaction:\n")
     cat("[1] Register Account Name\n")
     cat("[2] Deposit Amount\n")
     cat("[3] Withdraw Amount\n")
     cat("[4] Currency Exchange\n")
     cat("[5] Record Exchange Rates\n")
-    cat("[6] Show Interest Amount\n")
+    cat("[6] Show Interest Amount\n\n")
+
 }
 
 registerAccount <- function(){
-    cat("[REGISTER ACCOUNT NAME]\n")
+    cat("Register Account Name\n")
     accountName <- readline("Account Name: ")
 
     cat("\n***\n")
-    cat("Registered Account Name = ", accountName, "\n")
-    cat("***\n")
+    cat("Account Name =", accountName, "\n\n")
 
     return(accountName)
 
 }
 
-depositAmount <- function(accountName, balance){
-    cat("[DEPOSIT AMOUNT]\n")
+depositAmount <- function(accountName, balance) {
+    cat("Deposit Amount\n")
     depositAccountName <- readline("Account Name: ")
 
-    if (depositAccountName == accountName)
-    {
-        cat("Current Balance: ", balance, "\n")
-        cat("Currency: PHP\n")
-        depositAmount <- readline("\nDeposit Amount: ")
-        depositAmount <- as.numeric(depositAmount)
-        newBalance <- depositAmount + balance
-        
-        cat("\n***\n")
-        cat("Registered Account Name = ", accountName, "\n")
-        cat("Deposited Amount = ", depositAmount, "\n")
-        cat("Updated Balance = ", newBalance, "\n")
-        cat("***\n")
-        return(newBalance) #para maupdate balance sa main
-    }
+    cat("Current Balance:", sprintf("%.2f", balance), "\n")
+    cat("Currency: PHP\n")
 
-    # to be added deposit validation (e.g., negative amount)
+    depositAmount <- readline("\nDeposit Amount: ")
+    depositAmount <- as.numeric(depositAmount)
+    # newBalance <- balance + depositAmount (FOR FINAL VER)
+    newBalance <- balance 
 
-    else
-    {
-        cat("Error: Account name does not match records.\n")
-        return(balance) #no change sa balance
-    }
+    cat("\n***\n")
+    cat("Account Name =", depositAccountName, "\n")
+    cat("Deposit Amount =", sprintf("%.2f", depositAmount), "\n\n")
+    return(newBalance)
 }
 
 withdrawAmount <- function(accountName, balance) {
-    cat("[WITHDRAW AMOUNT]\n")
+    cat("Withdraw Amount\n")
     withdrawAccountName <- readline("Account Name: ")
 
-    if (withdrawAccountName == accountName)
-    {
-        cat("Current Balance:", balance, "\n")
-        cat("Currency: PHP\n")
+    cat("Current Balance:", sprintf("%.2f", balance), "\n")
+    cat("Currency: PHP\n")
 
-        withdrawAmount <- readline("\nWithdraw Amount: ")
-        withdrawAmount <- as.numeric(withdrawAmount)
-        newBalance <- balance - withdrawAmount
-        
-        cat("\n***\n")
-        cat("Registered Account Name = ", accountName, "\n")
-        cat("Withdrawn Amount = ", withdrawAmount, "\n")
-        cat("Updated Balance = ", newBalance, "\n")
-        cat("***\n")
-        return(newBalance) # para maupdate balance sa main
-    }
+    withdrawAmount <- readline("\nWithdraw Amount: ")
+    withdrawAmount <- as.numeric(withdrawAmount)
+    # newBalance <- balance - withdrawAmount
+    newBalance <- balance
 
-    # to be added withdrawal validation (e.g., insufficient funds)
+    cat("\n***\n")
+    cat("Account Name =", withdrawAccountName, "\n")
+    cat("Withdraw Amount =", sprintf("%.2f", withdrawAmount), "\n\n")
 
-    else
-    {
-        cat("Error: Account name does not match records.\n")
-        return(balance) # no change sa balance
-    }
+    return(newBalance)
 }
 
 currencyExchange <- function()
 {
-    cat("[FOREIGN CURRENCY EXCHANGE]\n")
+    cat("Foreign Currency Exchange\n")
     amount <- readline("Source Amount (PHP): ")
     amount <- as.numeric(amount)
     
     #sprintf is parang printf sa C
     cat("\nExchanged Currency\n")
-    cat("[1] Philippine Peso (PHP) = ", sprintf("%.2f", 1 * amount), "\n")
-    cat("[2] United States Dollar (USD) = ", sprintf("%.2f", 62 * amount), "\n")
-    cat("[3] Japanese Yen (JPY) = ", sprintf("%.2f", 0.4 * amount), "\n")
-    cat("[4] British Pound Sterling (GBP) = ", sprintf("%.2f", 84 * amount), "\n")
-    cat("[5] Euro (EUR) = ", sprintf("%.2f", 72 * amount), "\n")
-    cat("[6] Chinese Yuan Renminbi (CNY) = ", sprintf("%.2f", 9 * amount), "\n")
+    cat("[1] Philippine Peso (PHP) =", sprintf("%.2f", 1 * amount), "\n")
+    cat("[2] United States Dollar (USD) =", sprintf("%.2f", 62 * amount), "\n")
+    cat("[3] Japanese Yen (JPY) =", sprintf("%.2f", 0.4 * amount), "\n")
+    cat("[4] British Pound Sterling (GBP) =", sprintf("%.2f", 84 * amount), "\n")
+    cat("[5] Euro (EUR) =", sprintf("%.2f", 72 * amount), "\n")
+    cat("[6] Chinese Yuan Renminni (CNY) =", sprintf("%.2f", 9 * amount), "\n")
     
     cat("\n***\n")
     cat("Source Currency = Philippine Peso (PHP)\n")
-    cat("Source Amount (PHP) = ", amount, "\n")
-    println("***\n")
+    cat("Source Amount (PHP) =", sprintf("%.2f", amount), "\n\n")
 }
 
 recordExchange <- function()
 {
-    cat("[RECORD EXCHANGE RATE]\n\n")
+    cat("Record Exchange Rate\n\n")
+    
     cat("[1] Philippine Peso (PHP)\n")
     cat("[2] United States Dollar (USD)\n")
     cat("[3] Japanese Yen (JPY)\n")
@@ -151,37 +117,15 @@ recordExchange <- function()
     cat("[5] Euro (EUR)\n")
     cat("[6] Chinese Yuan Renminni (CNY)\n\n")
 
-    choice <- readln("Select Foreign Currency: ")
+    choice <- readline("Select Foreign Currency: ")
     choice <- as.integer(choice)
 
-    rate <- 1.00
+    rate <- readline("Exchange Rate: ")
+    rate <- as.numeric(rate)
 
-    if (choice == 1) {
-        rate <- 1.00
-    } 
-    else if (choice == 2) {
-        rate <- 62.00
-
-    } else if (choice == 3) {
-        rate <- 0.40
-
-    } else if (choice == 4) {
-        rate <- 84.00
-
-    } else if (choice == 5) {
-        rate <- 72.00
-
-    } else if (choice == 6) {
-        rate <- 9.00
-
-    } else {
-        cat("Error: Invalid choice.\n")
-    }
-
-    cat()("\n***\n")
-    cat()("Selected Foreign Currency = ", choice, "\n")
-    cat()("Exchange Rate: ", sprintf("%.2f", rate), "\n")
-    cat()("***\n")
+    cat("\n***\n")
+    cat("Selected Foreign Currency = [", choice, "]\n", sep = "")
+    cat("Exchange Rate:", sprintf("%.2f", rate), "\n\n")
 }
 
 main()
