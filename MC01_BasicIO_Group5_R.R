@@ -18,7 +18,7 @@ main <- function(){
     cat("choice =", choice, "\n\n")    
 
     accountName <- registerAccount()
-    balance <- 0.0
+    balance <- 1000.0
 
     balance <- depositAmount(accountName, balance)
     balance <- withdrawAmount(accountName, balance)
