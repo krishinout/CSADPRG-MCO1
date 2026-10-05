@@ -1,7 +1,7 @@
 /********************
 Last names: Danieles, De Guzman, Nono, Suazon
 Language: Java
-Paradigm(s):
+Paradigm(s): Procedural
 ********************/
 
 import java.util.*;
