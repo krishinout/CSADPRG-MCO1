@@ -11,11 +11,10 @@
 main <- function(){
 
     showMenu()
-    choice <- readline("choice: ")
+    choice <- readline("Choice: ")
     choice <- as.integer(choice)
-    cat("===================================\n\n")
-    cat("***\n")
-    cat("choice =", choice, "\n\n")    
+    cat("\n***\n")
+    cat("Choice =", choice, "\n\n")    
 
     accountName <- registerAccount()
     balance <- 1000.0
@@ -29,7 +28,6 @@ main <- function(){
 #####################################
 # FUNCTIONS FOR CHOICES AND MAIN MENU
 showMenu <- function(){
-    cat("\n===================================\n")
     cat("Select Transaction:\n")
     cat("[1] Register Account Name\n")
     cat("[2] Deposit Amount\n")
@@ -41,19 +39,18 @@ showMenu <- function(){
 }
 
 registerAccount <- function(){
-    cat("[REGISTER ACCOUNT NAME]\n")
+    cat("Register Account Name\n")
     accountName <- readline("Account Name: ")
 
     cat("\n***\n")
-    cat("Registered Account Name =", accountName, "\n")
-    cat("***\n\n")
+    cat("Account Name =", accountName, "\n\n")
 
     return(accountName)
 
 }
 
 depositAmount <- function(accountName, balance) {
-    cat("[DEPOSIT AMOUNT]\n")
+    cat("Deposit Amount\n")
     depositAccountName <- readline("Account Name: ")
 
     cat("Current Balance:", sprintf("%.2f", balance), "\n")
@@ -61,19 +58,17 @@ depositAmount <- function(accountName, balance) {
 
     depositAmount <- readline("\nDeposit Amount: ")
     depositAmount <- as.numeric(depositAmount)
-    newBalance <- balance + depositAmount
+    # newBalance <- balance + depositAmount (FOR FINAL VER)
+    newBalance <- balance 
 
     cat("\n***\n")
-    cat("Registered Account Name =", depositAccountName, "\n")
-    cat("Deposited Amount =", sprintf("%.2f", depositAmount), "\n")
-    cat("Updated Balance =", sprintf("%.2f", newBalance), "\n")
-    cat("***\n\n")
-
+    cat("Account Name =", depositAccountName, "\n")
+    cat("Deposit Amount =", sprintf("%.2f", depositAmount), "\n\n")
     return(newBalance)
 }
 
 withdrawAmount <- function(accountName, balance) {
-    cat("[WITHDRAW AMOUNT]\n")
+    cat("Withdraw Amount\n")
     withdrawAccountName <- readline("Account Name: ")
 
     cat("Current Balance:", sprintf("%.2f", balance), "\n")
@@ -81,20 +76,19 @@ withdrawAmount <- function(accountName, balance) {
 
     withdrawAmount <- readline("\nWithdraw Amount: ")
     withdrawAmount <- as.numeric(withdrawAmount)
-    newBalance <- balance - withdrawAmount
+    # newBalance <- balance - withdrawAmount
+    newBalance <- balance
 
     cat("\n***\n")
-    cat("Registered Account Name =", withdrawAccountName, "\n")
-    cat("Withdrawn Amount =", sprintf("%.2f", withdrawAmount), "\n")
-    cat("Updated Balance =", sprintf("%.2f", newBalance), "\n")
-    cat("***\n\n")
+    cat("Account Name =", withdrawAccountName, "\n")
+    cat("Withdraw Amount =", sprintf("%.2f", withdrawAmount), "\n\n")
 
     return(newBalance)
 }
 
 currencyExchange <- function()
 {
-    cat("[FOREIGN CURRENCY EXCHANGE]\n")
+    cat("Foreign Currency Exchange\n")
     amount <- readline("Source Amount (PHP): ")
     amount <- as.numeric(amount)
     
@@ -109,13 +103,12 @@ currencyExchange <- function()
     
     cat("\n***\n")
     cat("Source Currency = Philippine Peso (PHP)\n")
-    cat("Source Amount (PHP) =", sprintf("%.2f", amount), "\n")
-    cat("***\n\n")
+    cat("Source Amount (PHP) =", sprintf("%.2f", amount), "\n\n")
 }
 
 recordExchange <- function()
 {
-    cat("[RECORD EXCHANGE RATE]\n\n")
+    cat("Record Exchange Rate\n\n")
     
     cat("[1] Philippine Peso (PHP)\n")
     cat("[2] United States Dollar (USD)\n")
@@ -132,8 +125,7 @@ recordExchange <- function()
 
     cat("\n***\n")
     cat("Selected Foreign Currency = [", choice, "]\n", sep = "")
-    cat("Exchange Rate:", sprintf("%.2f", rate), "\n")
-    cat("***\n\n")
+    cat("Exchange Rate:", sprintf("%.2f", rate), "\n\n")
 }
 
 main()
