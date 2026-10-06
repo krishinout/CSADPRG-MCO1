@@ -152,6 +152,6 @@ void currencyExchange(){
     printf("[6] Chinese Yuan Renminbi (CNY) = %.2f\n", 9.00 * amount);
 
     printf("\n***\n");
-    printf("Source Currency = Philippine Peso (PHP)\n");
+    printf("Target Currency = Philippine Peso (PHP)\n");
     printf("Source Amount (PHP) = %.2f\n\n", amount);
 }
