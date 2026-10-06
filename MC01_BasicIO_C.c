@@ -139,7 +139,7 @@ void currencyExchange(){
     double amount;
     
     printf("Foreign Currency Exchange\n");
-    printf("Source Amount (PHP): ");
+    printf("Source Amount = ");
     scanf("%lf", &amount);
     getchar();
 
