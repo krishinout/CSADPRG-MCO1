@@ -3,7 +3,7 @@
 # 
 # Last names: Danieles, De Guzman, Nono, Suazon
 # Language: R
-# Paradigm(s):
+# Paradigm(s): Procedural
 #
 
 #####################################
