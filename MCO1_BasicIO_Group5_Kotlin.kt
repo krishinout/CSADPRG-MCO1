@@ -14,10 +14,10 @@ fun main()
     showMenu()
 
     val accountName = registerAccount()
-    var balance = 0.0
+    var balance = 1000.0
 
-    balance = depositAmount(accountName, balance)
-    balance = withdrawAmount(accountName, balance)
+    depositAmount(accountName, balance)
+    withdrawAmount(accountName, balance)
     recordExchange()
     currencyExchange()
 }
@@ -61,7 +61,8 @@ fun depositAmount(accountName: String, balance: Double): Double
 
     print("\nDeposit Amount: ")
     val depositAmount = readln().toDouble()
-    val newBalance = balance + depositAmount
+    val newBalance = balance 
+    // val newBalance = balance + depositAmount
 
     println("\n***")
     println("Registered Account Name = ${depositAccountName}")
@@ -83,7 +84,8 @@ fun withdrawAmount(accountName: String, balance: Double): Double
 
     print("\nWithdraw Amount: ")
     val withdrawAmount = readln().toDouble()
-    val newBalance = balance - withdrawAmount
+    val newBalance = balance
+    // val newBalance = balance - withdrawAmount
 
     println("\n***")
     println("Registered Account Name = ${withdrawAccountName}")
