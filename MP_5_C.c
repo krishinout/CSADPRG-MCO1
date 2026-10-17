@@ -13,26 +13,45 @@ Paradigm(s): Procedural, Imperative, Structured
 #define ANNUAL_RATE 0.05
 #define MAX_DAYS 3650
 
+
+/*
+* Enum representing the available currencies.
+* The integer values match the menu choices (1-6) minus 1.
+*/
 typedef enum{
     PHP, USD, JPY, GBP, EUR, CNY, CURRENCY_COUNT
 } Currency;
 
+
+/*
+* Array containing the full names of each currency.
+* Index corresponds to the Currency enum.
+*/
 const char* CURRENCY_NAMES[6] = {
     "Philippine Peso", "United States Dollar", "Japanese Yen",
     "British Pound Sterling", "Euro", "Chinese Yuan Renminni"
 };
 
+/*
+* Array containing the 3-letter codes of each currency.
+* Index corresponds to the Currency enum.
+*/
 const char* CURRENCY_CODES[6] = {
     "PHP", "USD", "JPY", "GBP", "EUR", "CNY"
 };
 
+
+/*
+* Structure representing a user's bank account.
+* Holds the account name, current balance, and base currency.
+*/
 typedef struct{
     char accountName[MAX_NAME];
     double balance;
     Currency currency;
 } Account;
 
-//Functions
+//Function Prototypes
 void showMenu();
 int  getChoice();
 void clearInput();
@@ -47,7 +66,12 @@ void showInterestAmount(Account* acct);
 char askBackToMenu();
 char askConvertAnother();
 
-//Main Program
+/*
+* Main entry point of the program.
+* Initializes the account and exchange rate array, then runs the main menu loop.
+* @param (void)
+* @return (int) Returns 0 upon successful termination.
+*/
 int main(){
     Account acct;
     acct.balance = DEFAULT_BALANCE;
@@ -97,12 +121,23 @@ int main(){
     return 0;
 }
 
-//Input validation helper functions
+/*
+* This function clears the input buffer up to the newline character.
+* It is used to prevent infinite loops and skipped prompts caused by leftover characters.
+* @param (void)
+* @return (void)
+*/
 void clearInput(){
     int c;
     while((c = getchar()) != '\n' && c != EOF);
 }
 
+/*
+* This function safely reads a double from the console.
+* It validates the input type and clears the buffer.
+* @param (double*) value is a pointer to the double variable where the input will be stored.
+* @return (int) Returns 1 if the read was successful, 0 if invalid input was detected.
+*/
 int readDouble(double* value){
     if(scanf("%lf", value) != 1){
         clearInput();
@@ -112,6 +147,12 @@ int readDouble(double* value){
     return 1;
 }
 
+/*
+* This function safely reads an integer from the console.
+* It validates the input type and clears the buffer.
+* @param (int*) value is a pointer to the integer variable where the input will be stored.
+* @return (int) Returns 1 if the read was successful, 0 if invalid input was detected.
+*/
 int readInt(int* value){
     if(scanf("%d", value) != 1){
         clearInput();
@@ -121,7 +162,11 @@ int readInt(int* value){
     return 1;
 }
 
-//Main Menu Function
+/*
+* This function prints the main menu options to the console.
+* @param (void)
+* @return (void)
+*/
 void showMenu(){
     printf("Select Transaction:\n");
     printf("[1] Register Account Name\n");
@@ -132,7 +177,12 @@ void showMenu(){
     printf("[6] Show Interest Amount\n\n");
 }
 
-//Choice Function
+/*
+* This function prompts the user for their menu choice.
+* If the user types a non-integer, it defaults to -1 to trigger an invalid choice.
+* @param (void)
+* @return (int) The integer choice entered by the user, or -1 if invalid.
+*/
 int getChoice(){
     int choice;
     printf("Choice: ");
@@ -143,7 +193,11 @@ int getChoice(){
     return choice;
 }
 
-//Back to Menu Function
+/*
+* This function asks the user if they want to return to the main menu.
+* @param (void)
+* @return (char) The validated character entered by the user.
+*/
 char askBackToMenu(){
     char ans;
     while(1){
@@ -158,7 +212,11 @@ char askBackToMenu(){
     }
 }
 
-//for currency change function helper
+/*
+* This function asks the user if they want to convert another currency.
+* @param (void)
+* @return (char) The validated character entered by the user.
+*/
 char askConvertAnother(){
     char ans;
     while(1){
@@ -173,7 +231,12 @@ char askConvertAnother(){
     }
 }
 
-//Register Account Name Function
+/*
+* This function prompts the user to input their account name.
+* It stores the input in the Account struct.
+* @param (Account*) acct is a pointer to the user's Account struct
+* @return (void)
+*/
 void registerAccountName(Account* acct){
     printf("Register Account Name\n");
     printf("Account Name: ");
@@ -182,7 +245,12 @@ void registerAccountName(Account* acct){
     printf("\n");
 }
 
-//Deposit Amount Function
+/*
+* This function handles the deposit process.
+* It displays the current balance, takes a deposit amount, validates it, and updates the account balance.
+* @param (Account*) acct is a pointer to the user's Account struct
+* @return (void)
+*/
 void depositAmount(Account* acct){
     double deposit;
 
@@ -206,7 +274,13 @@ void depositAmount(Account* acct){
     printf("Updated Balance: %.2f\n\n", acct->balance);
 }
 
-//Withdraw Amount Function
+/*
+* This function handles the withdrawal process.
+* It displays the current balance, takes a withdrawal amount, validates it, checks for sufficient funds, 
+* and updates the account balance.
+* @param (Account*) acct is a pointer to the user's Account struct
+* @return (void)
+*/
 void withdrawAmount(Account* acct){
     double withdraw;
 
@@ -231,7 +305,11 @@ void withdrawAmount(Account* acct){
     }
 }
 
-//Record Exchange Rate Function
+/*
+* This function allows the user to record an exchange rate for a foreign currency.
+* @param (double[]) rates is an array of size 6 storing the exchange rates relative to PHP.
+* @return (void)
+*/
 void recordExchangeRate(double rates[]){
     int choice;
     double rate;
@@ -272,7 +350,11 @@ void recordExchangeRate(double rates[]){
     printf("\n");
 }
 
-//Currency Exchange Function
+/*
+* This function performs currency exchange calculations.
+* @param (double[]) rates is an array of size 6 storing the exchange rates relative to PHP.
+* @return (void)
+*/
 void currencyExchange(double rates[]){
     char again = 'Y';
 
@@ -369,7 +451,13 @@ void currencyExchange(double rates[]){
     }
 }
 
-//Show Interest Amount Function
+/*
+* This function calculates and displays the expected daily interest over N days.
+* It displays the current account details, takes the number of days, and prints
+* a formatted table showing the day, interest earned, and running balance.
+* @param (Account*) acct is a pointer to the user's Account struct
+* @return (void)
+*/
 void showInterestAmount(Account* acct){
     int days;
 
