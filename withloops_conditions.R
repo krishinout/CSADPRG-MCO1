@@ -94,7 +94,7 @@ askConvertAnother <- function() {
     if(is.na(ans)){
         next
     } else if (ans == "Y" || ans == "y" || ans == "N" || ans == "n") {
-        return ans
+        return(ans)
     } else {
       cat("Error: Please enter Y or N.\n\n")
     }
@@ -191,7 +191,6 @@ currencyExchange <- function(rates)
     while(again == 'Y' || again == 'y'){
         cat("\nForeign Currency Exchange\n")
         cat("Source Currency Option:\n")
-        cat("Record Exchange rate\n\n")
         cat("[1] Philippine Peso (PHP)\n")
         cat("[2] United States Dollar (USD)\n")
         cat("[3] Japanese Yen (JPY)\n")
@@ -222,8 +221,8 @@ currencyExchange <- function(rates)
                 cat("Invalid input. Please enter a number.\n\n")
                 next
             }
-            if (amount < 1 || amount > 6) {
-                cat("Invalid source currency. Must be 1-6.\n\n")
+            if (amount <= 0) {
+                cat("Invalid source amount. Must be a positive number.\n\n")
                 next
             }
             break
@@ -246,8 +245,8 @@ currencyExchange <- function(rates)
                 cat("Invalid input. Please enter a number.\n\n")
                 next
             }
-            if (targett < 1 || target > 6) {
-                cat("Invalid source currency. Must be 1-6.\n\n")
+            if (target < 1 || target > 6) {
+                cat("Invalid exchange currency. Must be 1-6.\n\n")
                 next
             }
             break
@@ -328,6 +327,42 @@ recordExchange <- function(rates)
   rates[choice] <- rate
   cat("\n")
   return(rates)
+}
+
+showInterestAmount <- function(accountName, balance, accountCurrency) {
+  cat("Show Interest Amount\n")
+  cat("Account Name:", accountName, "\n")
+  cat(sprintf("Current Balance: %.2f\n", balance))
+  cat("Currency:", CURRENCY_CODES[accountCurrency], "\n")
+  cat("Interest Rate: 5%\n\n")
+
+  while(TRUE) {
+    days <- readline("Total Number of Days: ")
+    days <- as.numeric(days)
+    if (is.na(days)) {
+      cat("Invalid input. Please enter a number.\n\n")
+      next
+    }
+    if (days <= 0) {
+      cat("Invalid number of days. Must be greater than 0.\n\n")
+      next
+    }
+    if (days > MAX_DAYS) {
+      cat(sprintf("Number of days too large (max %d).\n\n", MAX_DAYS))
+      next
+    }
+    break
+  }
+
+  cat("\n")
+  cat(sprintf("%-4s| %-9s| %-8s|\n", "Day", "Interest", "Balance"))
+  current <- balance
+  for (i in 1:days) {
+    interest <- current * (ANNUAL_RATE / 365.0)
+    current <- current + interest
+    cat(sprintf("%-4d| %-9.2f| %-8.2f|\n", i, interest, current))
+  }
+  cat("\n")
 }
 
 main()
