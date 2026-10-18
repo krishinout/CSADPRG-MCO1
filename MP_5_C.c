@@ -55,6 +55,7 @@ typedef struct{
 void showMenu();
 int  getChoice();
 void clearInput();
+void clearScreen();
 int  readDouble(double* value);
 int  readInt(int* value);
 void registerAccountName(Account* acct);
@@ -86,9 +87,6 @@ int main(){
         showMenu();
         int choice = getChoice();
 
-        printf("\n***\n");
-        printf("Choice = %d\n\n", choice);
-
         switch(choice){
             case 1:
                 registerAccountName(&acct);
@@ -108,9 +106,6 @@ int main(){
             case 6:
                 showInterestAmount(&acct);
                 break;
-            default:
-                printf("Invalid choice. Please try again.\n\n");
-                continue;
         }
         char ans = askBackToMenu();
         if(ans == 'N' || ans == 'n'){
@@ -133,32 +128,61 @@ void clearInput(){
 }
 
 /*
+* This function clears the console screen using ANSI escape codes.
+* It resets the cursor to the top-left and clears everything.
+* @param (void)
+* @return (void)
+*/
+void clearScreen(){
+    printf("\033[2J\033[H\n\n");
+}
+
+/*
 * This function safely reads a double from the console.
-* It validates the input type and clears the buffer.
+* It checks if the input is blank (just pressing Enter) or invalid.
 * @param (double*) value is a pointer to the double variable where the input will be stored.
 * @return (int) Returns 1 if the read was successful, 0 if invalid input was detected.
 */
 int readDouble(double* value){
-    if(scanf("%lf", value) != 1){
-        clearInput();
+    char input[100];
+    char *endptr;
+    
+    if(fgets(input, sizeof(input), stdin) == NULL) return 0;
+    input[strcspn(input, "\n")] = '\0'; // remove newline
+
+    if(strlen(input) == 0) return 0; // blank input
+
+    *value = strtod(input, &endptr);
+    
+    if(endptr == input || *endptr != '\0') {
         return 0;
     }
-    clearInput();
+    
     return 1;
 }
 
 /*
 * This function safely reads an integer from the console.
-* It validates the input type and clears the buffer.
+* It checks if the input is blank (just pressing Enter) or invalid.
 * @param (int*) value is a pointer to the integer variable where the input will be stored.
 * @return (int) Returns 1 if the read was successful, 0 if invalid input was detected.
 */
 int readInt(int* value){
-    if(scanf("%d", value) != 1){
-        clearInput();
+    char input[100];
+    char *endptr;
+    
+    if(fgets(input, sizeof(input), stdin) == NULL) return 0;
+    input[strcspn(input, "\n")] = '\0'; // remove newline
+
+    if(strlen(input) == 0) return 0; // blank input
+
+    long val = strtol(input, &endptr, 10);
+    
+    if(endptr == input || *endptr != '\0') {
         return 0;
     }
-    clearInput();
+    
+    *value = (int)val;
     return 1;
 }
 
@@ -179,35 +203,51 @@ void showMenu(){
 
 /*
 * This function prompts the user for their menu choice.
-* If the user types a non-integer, it defaults to -1 to trigger an invalid choice.
+* It loops until a valid integer (1-6) is entered, then prints the *** echo.
 * @param (void)
-* @return (int) The integer choice entered by the user, or -1 if invalid.
+* @return (int) The valid integer choice entered by the user.
 */
 int getChoice(){
     int choice;
-    printf("Choice: ");
-    if(scanf("%d", &choice) != 1){
-        choice = -1;
+    while(1){
+        printf("Choice: ");
+        if(readInt(&choice)){
+            if(choice >= 1 && choice <= 6){
+                printf("\n***\n");
+                printf("Choice = %d\n\n", choice);
+                clearScreen(); // Clear here so the transaction screen starts fresh
+                return choice;
+            }
+            printf("Invalid choice. Please enter a number from 1 to 6.\n\n");
+        } else {
+            printf("Invalid input. Please enter a number.\n\n");
+        }
     }
-    clearInput();
-    return choice;
 }
 
 /*
 * This function asks the user if they want to return to the main menu.
+* Clears the screen immediately after a valid choice is made.
 * @param (void)
 * @return (char) The validated character entered by the user.
 */
 char askBackToMenu(){
-    char ans;
+    char input[MAX_NAME];
     while(1){
         printf("Back to the Main Menu (Y/N): ");
-        scanf(" %c", &ans);
-        clearInput();
-        printf("\n");
-        if(ans == 'Y' || ans == 'y' || ans == 'N' || ans == 'n'){
-            return ans;
+        fgets(input, MAX_NAME, stdin);
+        input[strcspn(input, "\n")] = '\0';
+
+        if(strlen(input) == 0){
+            printf("Input cannot be blank. Please enter Y or N.\n\n");
+            continue;
         }
+
+        if(strlen(input) == 1 && (input[0] == 'Y' || input[0] == 'y' || input[0] == 'N' || input[0] == 'n')){
+            clearScreen();
+            return input[0];
+        }
+        
         printf("Please enter Y or N.\n\n");
     }
 }
@@ -218,30 +258,47 @@ char askBackToMenu(){
 * @return (char) The validated character entered by the user.
 */
 char askConvertAnother(){
-    char ans;
+    char input[MAX_NAME];
     while(1){
         printf("Convert another currency (Y/N)? ");
-        scanf(" %c", &ans);
-        clearInput();
-        printf("\n");
-        if(ans == 'Y' || ans == 'y' || ans == 'N' || ans == 'n'){
-            return ans;
+        fgets(input, MAX_NAME, stdin);
+        input[strcspn(input, "\n")] = '\0';
+
+        if(strlen(input) == 0){
+            printf("Input cannot be blank. Please enter Y or N.\n\n");
+            continue;
         }
+
+        if(strlen(input) == 1 && (input[0] == 'Y' || input[0] == 'y' || input[0] == 'N' || input[0] == 'n')){
+            return input[0];
+        }
+        
         printf("Please enter Y or N.\n\n");
     }
 }
 
 /*
 * This function prompts the user to input their account name.
-* It stores the input in the Account struct.
+* It loops until a non-blank name is entered and stores it in the Account struct.
 * @param (Account*) acct is a pointer to the user's Account struct
 * @return (void)
 */
 void registerAccountName(Account* acct){
     printf("Register Account Name\n");
-    printf("Account Name: ");
-    fgets(acct->accountName, MAX_NAME, stdin);
-    acct->accountName[strcspn(acct->accountName, "\n")] = '\0';
+    
+    while(1){
+        printf("Account Name: ");
+        fgets(acct->accountName, MAX_NAME, stdin);
+        acct->accountName[strcspn(acct->accountName, "\n")] = '\0';
+        
+        if(strlen(acct->accountName) == 0){
+            printf("Account Name cannot be blank. Please try again.\n\n");
+            continue;
+        }
+        
+        break;
+    }
+    
     printf("\n");
 }
 
@@ -259,15 +316,17 @@ void depositAmount(Account* acct){
     printf("Current Balance: %.2f\n", acct->balance);
     printf("Currency: %s\n\n", CURRENCY_CODES[acct->currency]);
 
-    printf("Deposit Amount: ");
-    if(!readDouble(&deposit)){
-        printf("Invalid input.\n\n");
-        return;
-    }
-
-    if(deposit <= 0){
-        printf("Invalid deposit amount.\n\n");
-        return;
+    while(1){
+        printf("Deposit Amount: ");
+        if(!readDouble(&deposit)){
+            printf("Invalid input. Please enter a valid number.\n\n");
+            continue;
+        }
+        if(deposit <= 0){
+            printf("Invalid deposit amount. Must be greater than 0.\n\n");
+            continue;
+        }
+        break;
     }
 
     acct->balance += deposit;
@@ -289,20 +348,25 @@ void withdrawAmount(Account* acct){
     printf("Current Balance: %.2f\n", acct->balance);
     printf("Currency: %s\n\n", CURRENCY_CODES[acct->currency]);
 
-    printf("Withdraw Amount: ");
-    if(!readDouble(&withdraw)){
-        printf("Invalid input.\n\n");
-        return;
+    while(1){
+        printf("Withdraw Amount: ");
+        if(!readDouble(&withdraw)){
+            printf("Invalid input. Please enter a valid number.\n\n");
+            continue;
+        }
+        if(withdraw <= 0){
+            printf("Invalid withdraw amount. Must be greater than 0.\n\n");
+            continue;
+        }
+        if(withdraw > acct->balance){
+            printf("Insufficient funds. You only have %.2f.\n\n", acct->balance);
+            continue;
+        }
+        break;
     }
 
-    if(withdraw <= 0){
-        printf("Invalid withdraw amount.\n\n");
-    } else if(withdraw > acct->balance){
-        printf("Insufficient funds.\n\n");
-    } else {
-        acct->balance -= withdraw;
-        printf("Updated Balance: %.2f\n\n", acct->balance);
-    }
+    acct->balance -= withdraw;
+    printf("Updated Balance: %.2f\n\n", acct->balance);
 }
 
 /*
@@ -322,28 +386,34 @@ void recordExchangeRate(double rates[]){
     printf("[5] Euro (EUR)\n");
     printf("[6] Chinese Yuan Renminni (CNY)\n\n");
 
-    printf("Select Foreign Currency: ");
-    if(!readInt(&choice)){
-        printf("Invalid input.\n\n");
-        return;
-    }
-    if(choice < 1 || choice > 6){
-        printf("Invalid currency choice.\n\n");
-        return;
-    }
-    if(choice == 1){
-        printf("PHP is the base currency. Cannot set its rate.\n\n");
-        return;
+    while(1){
+        printf("Select Foreign Currency: ");
+        if(!readInt(&choice)){
+            printf("Invalid input. Please enter a number.\n\n");
+            continue;
+        }
+        if(choice < 1 || choice > 6){
+            printf("Invalid currency choice. Must be 1-6.\n\n");
+            continue;
+        }
+        if(choice == 1){
+            printf("PHP is the base currency. Cannot set its rate.\n\n");
+            continue;
+        }
+        break;
     }
 
-    printf("Exchange Rate: ");
-    if(!readDouble(&rate)){
-        printf("Invalid input.\n\n");
-        return;
-    }
-    if(rate <= 0){
-        printf("Invalid exchange rate.\n\n");
-        return;
+    while(1){
+        printf("Exchange Rate: ");
+        if(!readDouble(&rate)){
+            printf("Invalid input. Please enter a valid number.\n\n");
+            continue;
+        }
+        if(rate <= 0){
+            printf("Invalid exchange rate. Must be greater than 0.\n\n");
+            continue;
+        }
+        break;
     }
 
     rates[choice - 1] = rate;
@@ -371,30 +441,30 @@ void currencyExchange(double rates[]){
         printf("[5] Euro (EUR)\n");
         printf("[6] Chinese Yuan Renminni (CNY)\n\n");
 
-        printf("Source Currency: ");
-        if(!readInt(&source)){
-            printf("Invalid input.\n\n");
-            again = askConvertAnother();
-            continue;
+        while(1){
+            printf("Source Currency: ");
+            if(!readInt(&source)){
+                printf("Invalid input. Please enter a number.\n\n");
+                continue;
+            }
+            if(source < 1 || source > 6){
+                printf("Invalid source currency. Must be 1-6.\n\n");
+                continue;
+            }
+            break;
         }
 
-        if(source < 1 || source > 6){
-            printf("Invalid source currency.\n\n");
-            again = askConvertAnother();
-            continue;
-        }
-
-        printf("Source Amount: ");
-        if(!readDouble(&amount)){
-            printf("Invalid input.\n\n");
-            again = askConvertAnother();
-            continue;
-        }
-
-        if(amount <= 0){
-            printf("Invalid amount.\n\n");
-            again = askConvertAnother();
-            continue;
+        while(1){
+            printf("Source Amount: ");
+            if(!readDouble(&amount)){
+                printf("Invalid input. Please enter a valid number.\n\n");
+                continue;
+            }
+            if(amount <= 0){
+                printf("Invalid amount. Must be greater than 0.\n\n");
+                continue;
+            }
+            break;
         }
         printf("\n");
 
@@ -406,27 +476,27 @@ void currencyExchange(double rates[]){
         printf("[5] Euro (EUR)\n");
         printf("[6] Chinese Yuan Renminni (CNY)\n\n");
 
-        printf("Exchange Currency: ");
-        if(!readInt(&target)){
-            printf("Invalid input.\n\n");
-            again = askConvertAnother();
-            continue;
-        }
-
-        if(target < 1 || target > 6){
-            printf("Invalid target currency.\n\n");
-            again = askConvertAnother();
-            continue;
+        while(1){
+            printf("Exchange Currency: ");
+            if(!readInt(&target)){
+                printf("Invalid input. Please enter a number.\n\n");
+                continue;
+            }
+            if(target < 1 || target > 6){
+                printf("Invalid target currency. Must be 1-6.\n\n");
+                continue;
+            }
+            break;
         }
 
         // to check if rates are set
         if(source != 1 && rates[source - 1] == 0){
-            printf("Rate for %s not yet recorded.\n\n", CURRENCY_CODES[source - 1]);
+            printf("Rate for %s not yet recorded. Please record it first.\n\n", CURRENCY_CODES[source - 1]);
             again = askConvertAnother();
             continue;
         }
         if(target != 1 && rates[target - 1] == 0){
-            printf("Rate for %s not yet recorded.\n\n", CURRENCY_CODES[target - 1]);
+            printf("Rate for %s not yet recorded. Please record it first.\n\n", CURRENCY_CODES[target - 1]);
             again = askConvertAnother();
             continue;
         }
@@ -467,20 +537,21 @@ void showInterestAmount(Account* acct){
     printf("Currency: %s\n", CURRENCY_CODES[acct->currency]);
     printf("Interest Rate: 5%%\n\n");
 
-    printf("Total Number of Days: ");
-    if(!readInt(&days)){
-        printf("Invalid input.\n\n");
-        return;
-    }
-
-    if(days <= 0){
-        printf("Invalid number of days.\n\n");
-        return;
-    }
-
-    if(days > MAX_DAYS){
-        printf("Number of days too large (max %d).\n\n", MAX_DAYS);
-        return;
+    while(1){
+        printf("Total Number of Days: ");
+        if(!readInt(&days)){
+            printf("Invalid input. Please enter a number.\n\n");
+            continue;
+        }
+        if(days <= 0){
+            printf("Invalid number of days. Must be greater than 0.\n\n");
+            continue;
+        }
+        if(days > MAX_DAYS){
+            printf("Number of days too large (max %d).\n\n", MAX_DAYS);
+            continue;
+        }
+        break;
     }
 
     printf("\n");
