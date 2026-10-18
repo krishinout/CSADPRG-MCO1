@@ -1,12 +1,22 @@
-#
-# MCO Milestone 1: Basic I/O Operations in R
 # 
 # Last names: Danieles, De Guzman, Nono, Suazon
 # Language: R
 # Paradigm(s): Procedural
 #
-
 #####################################
+
+# walang constants sa R so wag nlng baguhin pag naka caps
+MAX_NAME <- 100
+DEFAULT_BALANCE <- 1000.00
+ANNUAL_RATE <- 0.05
+MAX_DAYS <- 3650
+
+CURRENCY_NAMES <- c(
+  "Philippine Peso", "United States Dollar", "Japanese Yen",
+  "British Pound Sterling", "Euro", "Chinese Yuan Renminni"
+)
+CURRENCY_CODES <- c("PHP", "USD", "JPY", "GBP", "EUR", "CNY")
+
 # MAIN PROGRAM
 main <- function(){
     accountName <- ""
@@ -44,6 +54,7 @@ main <- function(){
         } else{
             cat("Error: Invalid choice")
         }
+        askBackToMenu()
     }
 }
 
@@ -57,6 +68,37 @@ showMenu <- function(){
     cat("[4] Currency Exchange\n")
     cat("[5] Record Exchange Rates\n")
     cat("[6] Show Interest Amount\n")
+}
+
+#This function asks the user if they want to return to the main menu.
+askBackToMenu <- function() {
+  while(TRUE) {
+    ans <- readline("Back to the Main Menu (Y/N): ")
+    if(is.na(ans)){
+        next
+    } else if (ans == "Y" || ans == "y") {
+      break
+    } else if (ans == "N" || ans == "n") {
+      cat("Thank you!\n")
+      quit(save = "no")
+    } else {
+      cat("Error: Please enter Y or N.\n\n")
+    }
+  }
+}
+
+# This function asks the user if they want to convert another currency.
+askConvertAnother <- function() {
+  while(TRUE) {
+    ans <- readline("Convert another currency (Y/N)? ")
+    if(is.na(ans)){
+        next
+    } else if (ans == "Y" || ans == "y" || ans == "N" || ans == "n") {
+        return ans
+    } else {
+      cat("Error: Please enter Y or N.\n\n")
+    }
+}
 }
 
 registerAccount <- function(){
