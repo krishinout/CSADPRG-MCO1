@@ -1,19 +1,23 @@
 import java.util.*;
 
 public class MainMenu{
-    Scanner sc = new Scanner(System.in);
+    private Scanner sc = new Scanner(System.in);
     private Account account;
     private ExchangeRate exchangeRate = new ExchangeRate();
-    private List<Interest.DailyEntry> dailyInterest = new ArrayList<>();
 
     // the main menu screen with validation checker
     public void mainMenu(){
+        clearScreen();
         while(true){
             showMenu();
             int choice = ifChoiceValid(6, 0, "Choice: ");
 
+            if(choice == 0)
+                return;
+
+            clearScreen();
+
             switch (choice) {
-                case 0: return;
                 case 1: registerAccount();
                     break;
                 case 2: depositAmount();
@@ -27,11 +31,12 @@ public class MainMenu{
                 case 6: showInterest(); 
                     break;
             }
+
+            clearScreen();
         }
     }
 
     public void showMenu(){
-        System.out.println("\n===================================");
         System.out.println("Select Transaction:");
         System.out.println("[1] Register Account Name");
         System.out.println("[2] Deposit Amount");
@@ -63,21 +68,25 @@ public class MainMenu{
         }
     }
 
+    public static void clearScreen(){
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
     public void registerAccount(){
 
         String name;
-
         // to avoid invalid inputs of names
         do { 
             System.out.println("Register Account Name");
             System.out.print("Account Name: ");
-            name = sc.nextLine();
+            name = sc.nextLine().trim();
 
-            if (name.equals("")){
-                System.out.print("Error: Invalid Name Registered");
+            if (name.isEmpty()){
+                System.out.println("Error: Invalid Name Registered");
             }
             
-        } while (name.equals(""));
+        } while (name.isEmpty());
         
         account = new Account(name);
         System.out.println();
@@ -91,10 +100,10 @@ public class MainMenu{
             System.out.print("Back to the Main Menu (Y/N): " );
             String choice = sc.nextLine().trim().toUpperCase();
 
-            if(choice.equals("N")){
+            if(choice.equals("N") || choice.equals("n")){
                 continue;
             }
-            if(choice.equals("Y")){
+            if(choice.equals("Y") || choice.equals("y")){
                 break;
             }
 
@@ -104,21 +113,23 @@ public class MainMenu{
 
 
     public void depositAmount(){
+
+        if (account == null){
+            System.out.println("Error: No account registered");
+            exit();
+            return;
+        } 
+
         System.out.println("Deposit Amount");
-        System.out.print("Account Name: ");
-        String name = sc.nextLine();
+        System.out.println("Account Name: " + account.getAccountName());
+        System.out.printf("Current Balance: %.2f\n", account.getBalance());
+        System.out.println("Currency: PHP");
+        System.out.println();
 
-        if (!name.equals(account.getAccountName())){
-            System.out.println("Error: Account name does not match records.");
-        } else{
-            System.out.printf("Current Balance: %.2f\n", account.getBalance());
-            System.out.println("Currency: PHP");
-
-            double depAmount = readAmount("Deposit Amount: ");
-
-            account.deposit(depAmount);
-            System.out.printf("Updated Balance: %.2f\n", account.getBalance());
-        }
+        double depAmount = readAmount("Deposit Amount: ");
+        account.deposit(depAmount);
+        System.out.printf("Updated Balance: %.2f\n", account.getBalance());
+        System.out.println();
 
        exit();
     }
@@ -144,27 +155,53 @@ public class MainMenu{
         }
     }
 
+    public int readInt(String prompt){
+        while(true){
+            try{
+                System.out.print(prompt);
+                int value = sc.nextInt();
+                sc.nextLine();
+
+                if(value > 0){
+                    return value;
+                }
+
+                System.out.println("Error: Input must be positive");
+            } catch (InputMismatchException e){
+                System.out.println("Error: Invalid Input");
+                sc.nextLine();
+            }
+        }
+    }
+
 
     public void withdrawAmount(){
-        System.out.println("Withdraw Amount");
-        System.out.print("Account Name: ");
-        String name = sc.nextLine();
-        
-        if (!name.equals(account.getAccountName())){
-            System.out.println("Error: Account name does not match records.");
-        } else{
-            System.out.printf("Current Balance: %.2f\n", account.getBalance());
-            System.out.println("Currency: PHP");
 
+         if (account == null){
+            System.out.println("Error: No account registered");
+            exit();
+            return;
+        }
+
+        System.out.println("Withdraw Amount");
+        System.out.println("Account Name: " + account.getAccountName());
+        System.out.printf("Current Balance: %.2f\n", account.getBalance());
+        System.out.println("Currency: PHP");
+        System.out.println();
+        
+        while (true){
             double witAmount = readAmount("Withdraw Amount: ");
 
             if (witAmount > account.getBalance()){
-                System.out.println("Error: Insufficient Funds");
-            } else{
-                account.withdraw(witAmount);
-                System.out.printf("Updated Balance: %.2f\n", account.getBalance());
-            }
+            System.out.println("Error: Insufficient Funds");
+            continue;
+            } 
+
+            account.withdraw(witAmount);
+            System.out.printf("Updated Balance: %.2f\n", account.getBalance());
+            break;
         }
+        System.out.println();
 
        exit();
     }
@@ -183,6 +220,7 @@ public class MainMenu{
             Currency currency = choiceToCurrency(choice);
             exchangeRate.setRate(currency, rate);
         }
+        System.out.println();
 
         exit();
     }
@@ -205,11 +243,11 @@ public class MainMenu{
         System.out.println("[3] Japanese Yen (JPY)");
         System.out.println("[4] British Pound Sterling (GBP)");
         System.out.println("[5] Euro (EUR)");
-        System.out.println("[6] Chinese Yuan Renminni (CNY)");
+        System.out.println("[6] Chinese Yuan Renminbi (CNY)");
         System.out.println();
     }
 
-    public void currencyExchange(){
+    public void exchangeCurrency(){
         boolean willConvert = true;
 
         while(willConvert){
@@ -236,6 +274,7 @@ public class MainMenu{
             }
 
             boolean convertAgain = false;
+            System.out.println();
 
             while(!convertAgain){
                 System.out.print("Convert another currency (Y/N)? . . . ");
@@ -243,6 +282,8 @@ public class MainMenu{
 
                 if(choice.equals("Y")){
                     willConvert = true;
+                    convertAgain = true;
+
                 } else if(choice.equals("N")){
                     willConvert = false;
                     convertAgain = true;
@@ -255,23 +296,27 @@ public class MainMenu{
     }
 
     public void showInterest(){
+
+         if (account == null){
+            System.out.println("Error: No account registered");
+            exit();
+            return;
+        }
+
         System.out.println("Show Interest Amount");
         System.out.println("Account Name: " + account.getAccountName());
         System.out.printf("Current Balance %.2f\n", account.getBalance());
         System.out.println("Currency: PHP");
         System.out.println();
 
-        System.out.print("Total Number of Days: ");
-        int days = sc.nextInt();
-        sc.nextLine();
+        int days = readInt("Total Number of Days: ");
 
         System.out.println("Day | Interest | Balance |");
 
-        Interest interest = new Interest();
-        List<Interest.DailyEntry> entries = interest.ExpectedDailyInterest(days, account.getBalance());
+        List<Interest.DailyEntry> entries = account.dailyInterest(days);
         
         for(Interest.DailyEntry e: entries){
-            System.out.printf("\n", e.day(), e.interest(), e.balance());
+            System.out.printf("%d  |  %.2f  |  %.2f%n", e.day(), e.interest(), e.balance());
         }
 
         exit();

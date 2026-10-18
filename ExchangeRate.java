@@ -38,7 +38,7 @@ public class ExchangeRate {
         if(from == to){ // if base currency(PHP) return as is
             return amount;
         }
- 
+
         // converts amount to php
         if(from == Currency.PHP){
             amountInPhp = amount;

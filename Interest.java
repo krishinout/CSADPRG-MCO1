@@ -19,7 +19,7 @@ public class Interest {
         return balance * ANNUAL_RATE;
     }
 
-    public List<DailyEntry> ExpectedDailyInterest(int days, double startBalance){
+    public List<DailyEntry> expectedDailyInterest(int days, double startBalance){
         ArrayList<DailyEntry> entries = new ArrayList<>(); // creates the arrayList that stores each day entry / record 
         double newBalance = startBalance;
 

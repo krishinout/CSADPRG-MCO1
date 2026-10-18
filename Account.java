@@ -4,6 +4,8 @@
  * contains name, balance, and current currency (automatically php)
  */
 
+import java.util.*;
+
 public class Account{
     // Attributes
     private String accountName;
@@ -58,7 +60,7 @@ public class Account{
     // interest computations
     public List<Interest.DailyEntry> dailyInterest(int days){
 
-        return interest.ExpectedDailyInterest(days, balance);
+        return interest.expectedDailyInterest(days, balance);
 
     }
 
