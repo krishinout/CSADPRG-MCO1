@@ -1,21 +1,23 @@
 import java.util.*;
 
 /**
- * This class is for the storage of rates and conversion of rates
- * Makes use of an enum map, like a dictionary for easy storage and access of currency details
+ * Stores the exchange rate for each foreign currency (is relative to PHP)
+ * and performs conversions between the currencies.
+ * Uses an EnumMap which allows each Currency to map to its rate.
  */
 
 public class ExchangeRate {
+    
     /**
-     * NOTE:
-     * Currency is like the type of enum class
-     * double is the data type associated with each type
+     * Maps each currency to its rate relative to PHP.
+     * PHP not stored as fixed at 1.00.
      */
     private final Map<Currency, Double> rates = new EnumMap<>(Currency.class);
 
     /**
-     * Sets the rate for each currency, and only returns true when successful
-     * Done for validation
+     * Sets the exchange rate for the given currency.
+     * @param currency is the Currency instance to set the rate for.
+     * @param rate represents the rate relative to PHP
      */
     public void setRate(Currency currency, Double rate){
         // places in enum
@@ -23,14 +25,20 @@ public class ExchangeRate {
     }
 
     /**
-     * Checks if a rating is set, calling before conversion
+     * Checks if a rate is set/available for the given currency.
+     * @param currency is the Currency instance to check.
+     * @return true if a rate exists, false otherwise.
      */
     public boolean ifRateExists(Currency currency){
         return currency == Currency.PHP || rates.containsKey(currency);
     }
 
     /**
-     * Conversion from one currency to another
+     * Converts an amount from one currency to another with PHP as base.
+     * @param amount is the amount to convert.
+     * @param from represents the source Currency instance.
+     * @param to represents the target Currency instance.
+     * @return the converted amount as a double.
      */
     public double convert(double amount, Currency from, Currency to){
         double amountInPhp, convertedAmt;
@@ -46,7 +54,7 @@ public class ExchangeRate {
             amountInPhp = amount * rates.get(from);
         }
 
-        // converts php to other currency
+        // converts php to target currency
         if(to == Currency.PHP){
             convertedAmt = amountInPhp;
         } else {

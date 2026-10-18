@@ -1,11 +1,19 @@
 import java.util.*;
 
+/**
+ * Serves as the GUI, handling all user interactions, displaying the main menu
+ * and transaction screens, and input validation.
+ * Delegates logic to the Account class, interest logic to the Interest class,
+ * and currency conversion to the ExchangeRate class.
+ */
 public class MainMenu{
     private Scanner sc = new Scanner(System.in);
-    private Account account;
+    private Account account; // null until registered
     private ExchangeRate exchangeRate = new ExchangeRate();
 
-    // the main menu screen with validation checker
+    /**
+     * Runs the main menu loop
+     */
     public void mainMenu(){
         clearScreen();
         while(true){
@@ -36,6 +44,9 @@ public class MainMenu{
         }
     }
 
+    /**
+     * Displays the main menu options
+     */
     public void showMenu(){
         System.out.println("Select Transaction:");
         System.out.println("[1] Register Account Name");
@@ -47,6 +58,13 @@ public class MainMenu{
         System.out.println("[0] Exit");
     }
 
+    /**
+     * Reads the input and continues to prompt until it is within the given range (hi, lo).
+     * @param hi represents the highest acceptable value.
+     * @param lo represents the lowest acceptable value.
+     * @param prompt represents the prompt shown to the user.
+     * @return a value integer/choice within the given range.
+     */
     public int ifChoiceValid(int hi, int lo, String prompt){
 
         while(true){
@@ -68,15 +86,21 @@ public class MainMenu{
         }
     }
 
+    /**
+     * Clears the console using the ANSI escape codes
+     */
     public static void clearScreen(){
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
 
+    /**
+     * Simulates account registration with validation.
+     */
     public void registerAccount(){
 
         String name;
-        // to avoid invalid inputs of names
+        // Input validation of names.
         do { 
             System.out.println("Register Account Name");
             System.out.print("Account Name: ");
@@ -95,6 +119,9 @@ public class MainMenu{
 
     }
 
+    /**
+     * Asks whether to return to the main menu and loops until valid input (Y/N).
+     */
     public void exit(){
         while (true){
             System.out.print("Back to the Main Menu (Y/N): " );
@@ -111,7 +138,10 @@ public class MainMenu{
         }
     }
 
-
+    /** 
+     * Simulates the deposit transaction.
+     * Reads amount and updates balance accordingly.
+     */
     public void depositAmount(){
 
         if (account == null){
@@ -134,7 +164,10 @@ public class MainMenu{
        exit();
     }
 
-
+    /**
+     * Validating for amount entered by user, continues to prompt until a numerical
+     * and positive value is inputted.
+     */
     public double readAmount(String prompt){
         while(true){
             try {
@@ -155,6 +188,12 @@ public class MainMenu{
         }
     }
 
+    /**
+     * Similar to readAmount, validating for integer entered by user. Continues
+     * to prompt until a positive integer is inputted.
+     * @param prompt represents the prompt shown to user.
+     * @return the valid positive integer.
+     */
     public int readInt(String prompt){
         while(true){
             try{
@@ -174,7 +213,10 @@ public class MainMenu{
         }
     }
 
-
+    /** 
+     * Simulates the withdraw transaction.
+     * Reads amount and updates balance accordingly.
+     */
     public void withdrawAmount(){
 
          if (account == null){
@@ -206,6 +248,9 @@ public class MainMenu{
        exit();
     }
 
+    /**
+     * Sets a rate for a foreign currency.
+     */
     public void recordExchange(){
         System.out.println("Record Exchange Rate");
         System.out.println();
@@ -213,6 +258,7 @@ public class MainMenu{
 
         int choice = ifChoiceValid(6, 1, "Select Foreign Currency: ");
 
+        // Cannot update PHP as it is the base currency
         if(choice == 1){
             System.out.println("PHP is base currency. Its rate is fixed at 1.00");
         } else{
@@ -225,6 +271,11 @@ public class MainMenu{
         exit();
     }
 
+    /**
+     * Converts a menu number to its Currency enum Value.
+     * @param choice represents the choice number (1-6).
+     * @return the corresponding Currency.
+     */
     public Currency choiceToCurrency(int choice){
         switch(choice){
             case 1: return Currency.PHP;
@@ -237,6 +288,9 @@ public class MainMenu{
         }
     }
 
+    /**
+     * Displays the currency selection list.
+     */
     public void showCurrencies(){
         System.out.println("[1] Philippine Peso (PHP)");
         System.out.println("[2] United States Dollar (USD)");
@@ -247,6 +301,9 @@ public class MainMenu{
         System.out.println();
     }
 
+    /**
+     * Simulates conversion from source currency to target currency.
+     */
     public void exchangeCurrency(){
         boolean willConvert = true;
 
@@ -265,6 +322,7 @@ public class MainMenu{
             int c2 = ifChoiceValid(6, 1, "Exchange Currency: ");
             Currency exchangeCurr = choiceToCurrency(c2);
 
+             // Implementation of a checker in case no value is set to the chosen currency.
             if(!exchangeRate.ifRateExists(sourceCurr)){
                 System.out.println("Error: No rate set for " + sourceCurr.getCode());
             } else if(!exchangeRate.ifRateExists(exchangeCurr)){
@@ -295,6 +353,9 @@ public class MainMenu{
 
     }
 
+    /**
+     * Computes and displays the daily interest table.
+     */
     public void showInterest(){
 
          if (account == null){
