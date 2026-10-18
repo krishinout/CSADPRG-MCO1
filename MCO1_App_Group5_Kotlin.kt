@@ -28,6 +28,7 @@ fun main()
             3 -> balance = withdrawAmount(accountName, balance)
             4 -> currencyExchange()
             5 -> recordExchange()
+            6 -> interestAmount(accountName, balance)
             else -> println("Error: Invalid choice")
         }
 
@@ -220,4 +221,33 @@ fun recordExchange()
     print("Exchange Rate: ")
     val rate = readln().toDouble()
     currencyRates[choice - 1] = rate // set the new exchange rate
+}
+
+fun interestAmount(accountName: String, balance: Double)
+{
+    println("[SHOW INTEREST AMOUNT]\n")
+
+    if (accountName.isEmpty())
+    {
+        println("Error: Please register an account name first.")
+        return
+    }
+
+    println("Account Name: ${accountName}")
+    println("Current Balance: ${balance}")
+    println("Currency: PHP")
+    println("Interest Rate: 5%")
+
+    print("Total Number of Days: ")
+    val days = readln().toInt()
+
+    var newBalance = balance
+    println("\n| Day | Interest | Balance |")
+    for (i in 1..days)
+    {
+        val interest = balance * 0.05 / 365
+        newBalance += interest
+
+        println("| ${String.format("%3d", i)} | ${String.format("%8.2f", interest)} | ${String.format("%7.2f", newBalance)} |")
+    }
 }
