@@ -17,12 +17,23 @@ main <- function(){
         showMenu()
         choice <- readline("choice: ")
         choice <- as.integer(choice)
-        cat("===================================\n")
+
+        # add this para di mag error if nag enter ng string 
+        if (is.na(choice)) {
+            cat("Error: Please enter a valid choice.\n\n")
+            next
+        }
+        
+        # need muna mag register account bago magpick ibang choice
+        if(accountName == "" && choice != 1){
+            cat("Error: Please register an account name first.\n\n")
+            next
+        }
 
         # WALA ATANG SWITCH CASE SA R?? check q mmya..
         if(choice == 1){
             accountName <- registerAccount()
-        } else if(choice == 2){
+        } else if(choice == 2 ){
             balance <- depositAmount(accountName, balance)
         } else if(choice == 3){
             balance <- withdrawAmount(accountName, balance)
@@ -39,7 +50,6 @@ main <- function(){
 #####################################
 # FUNCTIONS FOR CHOICES AND MAIN MENU
 showMenu <- function(){
-    cat("\n===================================\n")
     cat("Select Transaction:\n")
     cat("[1] Register Account Name\n")
     cat("[2] Deposit Amount\n")
@@ -50,79 +60,84 @@ showMenu <- function(){
 }
 
 registerAccount <- function(){
-    cat("[REGISTER ACCOUNT NAME]\n")
+    cat("\nRegister Account Name\n")
     accountName <- readline("Account Name: ")
 
-    cat("\n***\n")
+    cat("\n===\n")
     cat("Registered Account Name =", accountName, "\n")
-    cat("***\n")
+    cat("===\n\n")
 
     return(accountName)
 
 }
 
 depositAmount <- function(accountName, balance){
-    cat("[DEPOSIT AMOUNT]\n")
-    depositAccountName <- readline("Account Name: ")
+    cat("\nDeposit Amount\n")
+    cat("Account Name:", accountName, "\n")
+    cat("Current Balance:", sprintf("%.2f", balance), "\n")
+    cat("Currency: PHP\n")
 
-    if (depositAccountName == accountName)
-    {
-        cat("Current Balance:", sprintf("%.2f", balance), "\n")
-        cat("Currency: PHP\n")
+    #input validation for negative values 
+    while(TRUE){
         depositAmount <- readline("\nDeposit Amount: ")
         depositAmount <- as.numeric(depositAmount)
-        newBalance <- depositAmount + balance
-        
-        cat("\n***\n")
-        cat("Registered Account Name =", accountName, "\n")
-        cat("Deposited Amount =", sprintf("%.2f", depositAmount), "\n")
-        cat("Updated Balance =", sprintf("%.2f", newBalance), "\n")
-        cat("***\n")
-        return(newBalance) #para maupdate balance sa main
+        if(is.na(depositAmount)){
+            cat("Error: Please enter a valid number.\n")
+        }
+        else if(depositAmount <= 0){
+            cat("Error: Cannot deposit negative number")
+        }
+        else{
+            break
+        }
     }
+    
+    newBalance <- depositAmount + balance
+    cat("\n===\n")
+    cat("Deposit Amount =", sprintf("%.2f", depositAmount), "\n")
+    cat("Updated Balance =", sprintf("%.2f", newBalance), "\n")
+    cat("===\n\n")
+    return(newBalance) #para maupdate balance sa main
 
-    # to be added deposit validation (e.g., negative amount)
-
-    else
-    {
-        cat("Error: Account name does not match records.\n")
-        return(balance) #no change sa balance
-    }
 }
 
 withdrawAmount <- function(accountName, balance) {
-    cat("[WITHDRAW AMOUNT]\n")
-    withdrawAccountName <- readline("Account Name: ")
+    cat("\nWithdraw Amount\n")
+    cat("Account Name:", accountName, "\n")
+    cat("Current Balance:", sprintf("%.2f", balance), "\n")
+    cat("Currency: PHP\n")
 
-    if (withdrawAccountName == accountName)
-    {
-        cat("Current Balance:", sprintf("%.2f", balance), "\n")
-        cat("Currency: PHP\n")
-
+    #input validation for negative values 
+    while(TRUE){
         withdrawAmount <- readline("\nWithdraw Amount: ")
         withdrawAmount <- as.numeric(withdrawAmount)
-        newBalance <- balance - withdrawAmount
-        
-        cat("\n***\n")
-        cat("Registered Account Name =", accountName, "\n")
-        cat("Withdrawn Amount =", sprintf("%.2f", withdrawAmount), "\n")
-        cat("Updated Balance =", sprintf("%.2f", newBalance), "\n")
-        cat("***\n")
-        return(newBalance) # para maupdate balance sa main
+        if(is.na(withdrawAmount)){
+            cat("Error: Please enter a valid number.\n")
+        }
+        else if(withdrawAmount < 0){
+            cat("Error: Cannot withdraw negative number")            
+        }
+        else if(withdrawAmount > balance){
+            cat("Error: insufficient funds")
+        }
+        else{
+            break
+        }
     }
 
-    # to be added withdrawal validation (e.g., insufficient funds)
+    newBalance <- balance - withdrawAmount
+    
+    cat("\n===\n")
+    cat("Withdraw Amount =", sprintf("%.2f", withdrawAmount), "\n")
+    cat("Updated Balance =", sprintf("%.2f", newBalance), "\n")
+    cat("===\n\n")
+    return(newBalance) # para maupdate balance sa main
 
-    else
-    {
-        cat("Error: Account name does not match records.\n")
-        return(balance) # no change sa balance
-    }
 }
 
 currencyExchange <- function()
 {
-    cat("[FOREIGN CURRENCY EXCHANGE]\n")
+    cat("\nForeign Currency Exchange\n")
     amount <- readline("Source Amount (PHP): ")
     amount <- as.numeric(amount)
     
