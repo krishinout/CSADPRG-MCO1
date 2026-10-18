@@ -103,14 +103,21 @@ askConvertAnother <- function() {
 
 registerAccount <- function(){
     cat("\nRegister Account Name\n")
-    accountName <- readline("Account Name: ")
+    while(TRUE){
+        accountName <- readline("Account Name: ")
+        if(trimws(accountName) == ""){
+            cat("Error: Name cannot be empty")
+        }
+        else{
+            break
+        }
+    }
 
     cat("\n===\n")
     cat("Registered Account Name =", accountName, "\n")
     cat("===\n\n")
 
     return(accountName)
-
 }
 
 depositAmount <- function(accountName, balance){
@@ -177,30 +184,105 @@ withdrawAmount <- function(accountName, balance) {
 
 }
 
-currencyExchange <- function()
+currencyExchange <- function(rates)
 {
-    cat("\nForeign Currency Exchange\n")
-    amount <- readline("Source Amount (PHP): ")
-    amount <- as.numeric(amount)
+    again <- 'Y'
     
-    #sprintf is parang printf sa C
-    cat("\nExchanged Currency\n")
-    cat("[1] Philippine Peso (PHP) =", sprintf("%.2f", 1 * amount), "\n")
-    cat("[2] United States Dollar (USD) =", sprintf("%.2f", 62 * amount), "\n")
-    cat("[3] Japanese Yen (JPY) =", sprintf("%.2f", 0.4 * amount), "\n")
-    cat("[4] British Pound Sterling (GBP) =", sprintf("%.2f", 84 * amount), "\n")
-    cat("[5] Euro (EUR) =", sprintf("%.2f", 72 * amount), "\n")
-    cat("[6] Chinese Yuan Renminni (CNY) =", sprintf("%.2f", 9 * amount), "\n")
+    while(again == 'Y' || again == 'y'){
+        cat("\nForeign Currency Exchange\n")
+        cat("Source Currency Option:\n")
+        cat("Record Exchange rate\n\n")
+        cat("[1] Philippine Peso (PHP)\n")
+        cat("[2] United States Dollar (USD)\n")
+        cat("[3] Japanese Yen (JPY)\n")
+        cat("[4] British Pound Sterling (GBP)\n")
+        cat("[5] Euro (EUR)\n")
+        cat("[6] Chinese Yuan Renminni (CNY)\n\n")
+        
+        while(TRUE){
+            source <- readline("Source Currency: ")
+            source <- as.numeric(source)
+
+            if (is.na(source)) {
+                cat("Invalid input. Please enter a number.\n\n")
+                next
+            }
+            if (source < 1 || source > 6) {
+                cat("Invalid source currency. Must be 1-6.\n\n")
+                next
+            }
+            break
+        }
+
+        while(TRUE){
+            amount <- readline("Source Amount: ")
+            amount <- as.numeric(amount)
+
+            if (is.na(amount)) {
+                cat("Invalid input. Please enter a number.\n\n")
+                next
+            }
+            if (amount < 1 || amount > 6) {
+                cat("Invalid source currency. Must be 1-6.\n\n")
+                next
+            }
+            break
+        }
+        cat("\n")
+
+        cat("Exchanged Currency Options\n\n")
+        cat("[1] Philippine Peso (PHP)\n")
+        cat("[2] United States Dollar (USD)\n")
+        cat("[3] Japanese Yen (JPY)\n")
+        cat("[4] British Pound Sterling (GBP)\n")
+        cat("[5] Euro (EUR)\n")
+        cat("[6] Chinese Yuan Renminni (CNY)\n\n")
+
+        while(TRUE){
+            target <- readline("Exchange Currency: ")
+            target <- as.numeric(target)
+
+            if (is.na(target)) {
+                cat("Invalid input. Please enter a number.\n\n")
+                next
+            }
+            if (targett < 1 || target > 6) {
+                cat("Invalid source currency. Must be 1-6.\n\n")
+                next
+            }
+            break
+        }
+
+    if (source != 1 && rates[source] == 0) {
+        cat(sprintf("Rate for %s not yet recorded. Please record it first.\n\n", CURRENCY_CODES[source]))
+        again <- askConvertAnother()
+        next
+    }
+    if (target != 1 && rates[target] == 0) {
+      cat(sprintf("Rate for %s not yet recorded. Please record it first.\n\n", CURRENCY_CODES[target]))
+      again <- askConvertAnother()
+      next
+    }
     
-    cat("\n***\n")
-    cat("Source Currency = Philippine Peso (PHP)\n")
-    cat("Source Amount (PHP) =", sprintf("%.2f", amount), "\n")
-    cat("***\n")
+    if(source == 1){
+        inPhp <- amount
+    }else{
+        inPhp <- amount * rates[source]
+    }
+
+    if(target == 1){
+        result <- inPhp
+    } else{
+        result <- inPhp / rates[target]
+    }
+
+    again <- askConvertAnother()
+    }
 }
 
-recordExchange <- function()
+recordExchange <- function(rates)
 {
-    cat("[RECORD EXCHANGE RATE]\n\n")
+    cat("Record Exchange rate\n\n")
     cat("[1] Philippine Peso (PHP)\n")
     cat("[2] United States Dollar (USD)\n")
     cat("[3] Japanese Yen (JPY)\n")
@@ -211,34 +293,41 @@ recordExchange <- function()
     choice <- readline("Select Foreign Currency: ")
     choice <- as.integer(choice)
 
-    rate <- 1.00
-
-    if (choice == 1) {
-        rate <- 1.00
-    } 
-    else if (choice == 2) {
-        rate <- 62.00
-
-    } else if (choice == 3) {
-        rate <- 0.40
-
-    } else if (choice == 4) {
-        rate <- 84.00
-
-    } else if (choice == 5) {
-        rate <- 72.00
-
-    } else if (choice == 6) {
-        rate <- 9.00
-
-    } else {
-        cat("Error: Invalid choice.\n")
+    while(TRUE){
+        choice <- readline("Select Foreign Currency: ")
+        choice <- as.numeric(choice)
+        if (is.na(choice)) {
+        cat("Invalid input. Please enter a number.\n\n")
+        next
+        }
+        if (choice < 1 || choice > 6) {
+        cat("Invalid currency choice. Must be 1-6.\n\n")
+        next
+        }
+        if (choice == 1) {
+        cat("PHP is the base currency. Cannot set its rate.\n\n")
+        next
+        }
+        break
     }
 
-    cat("\n***\n")
-    cat("Selected Foreign Currency = [", choice, "]\n", sep = "")
-    cat("Exchange Rate:", sprintf("%.2f", rate), "\n")
-    cat("***\n")
+        while(TRUE){
+            rate <- readline("Exchange rate ")
+            rate <- as.numeric(rate)
+            if (is.na(rate)) {
+                cat("Invalid input. Please enter a number.\n\n")
+                next
+            }
+            if (rate <= 0) {
+                cat("ERROR: Invalid exchange rate. Must be greater than 0.\n\n")
+                next
+            }
+            break
+    }
+
+  rates[choice] <- rate
+  cat("\n")
+  return(rates)
 }
 
 main()
