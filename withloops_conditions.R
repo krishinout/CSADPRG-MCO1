@@ -20,7 +20,9 @@ CURRENCY_CODES <- c("PHP", "USD", "JPY", "GBP", "EUR", "CNY")
 # MAIN PROGRAM
 main <- function(){
     accountName <- ""
-    balance <- 0.0
+    balance <- DEFAULT_BALANCE
+    accountCurrency <- 1L
+    rates <- c(1.0, 0, 0, 0, 0, 0)
 
     while(TRUE)
     {
@@ -44,14 +46,16 @@ main <- function(){
         if(choice == 1){
             accountName <- registerAccount()
         } else if(choice == 2 ){
-            balance <- depositAmount(accountName, balance)
+            balance <- depositAmount(accountName, balance, accountCurrency)
         } else if(choice == 3){
-            balance <- withdrawAmount(accountName, balance)
+            balance <- withdrawAmount(accountName, balance, accountCurrency)
         }else if(choice == 4){
-            currencyExchange()
+            currencyExchange(rates)
         } else if(choice == 5){
-            recordExchange()
-        } else{
+            rates <- recordExchange(rates)
+        } else if(choice == 6){
+            showInterestAmount(accountName, balance, accountCurrency)
+        }else{
             cat("Error: Invalid choice")
         }
         askBackToMenu()
@@ -73,7 +77,7 @@ showMenu <- function(){
 #This function asks the user if they want to return to the main menu.
 askBackToMenu <- function() {
   while(TRUE) {
-    ans <- readline("Back to the Main Menu (Y/N): ")
+    ans <- readline("\nBack to the Main Menu (Y/N): ")
     if(is.na(ans)){
         next
     } else if (ans == "Y" || ans == "y") {
@@ -106,29 +110,25 @@ registerAccount <- function(){
     while(TRUE){
         accountName <- readline("Account Name: ")
         if(trimws(accountName) == ""){
-            cat("Error: Name cannot be empty")
+            cat("Error: Name cannot be empty\n")
         }
         else{
             break
         }
     }
 
-    cat("\n===\n")
-    cat("Registered Account Name =", accountName, "\n")
-    cat("===\n\n")
-
     return(accountName)
 }
 
-depositAmount <- function(accountName, balance){
+depositAmount <- function(accountName, balance, accountCurrency){
     cat("\nDeposit Amount\n")
     cat("Account Name:", accountName, "\n")
-    cat("Current Balance:", sprintf("%.2f", balance), "\n")
-    cat("Currency: PHP\n")
+    cat("Current Balance:", sprintf("%.2f\n", balance))
+    cat("Currency:", CURRENCY_CODES[accountCurrency], "\n\n")
 
     #input validation for negative values 
     while(TRUE){
-        depositAmount <- readline("\nDeposit Amount: ")
+        depositAmount <- readline("Deposit Amount: ")
         depositAmount <- as.numeric(depositAmount)
         if(is.na(depositAmount)){
             cat("Error: Please enter a valid number.\n")
@@ -142,19 +142,17 @@ depositAmount <- function(accountName, balance){
     }
     
     newBalance <- depositAmount + balance
-    cat("\n===\n")
-    cat("Deposit Amount =", sprintf("%.2f", depositAmount), "\n")
     cat("Updated Balance =", sprintf("%.2f", newBalance), "\n")
-    cat("===\n\n")
+
     return(newBalance) #para maupdate balance sa main
 
 }
 
-withdrawAmount <- function(accountName, balance) {
+withdrawAmount <- function(accountName, balance, accountCurrency) {
     cat("\nWithdraw Amount\n")
     cat("Account Name:", accountName, "\n")
-    cat("Current Balance:", sprintf("%.2f", balance), "\n")
-    cat("Currency: PHP\n")
+    cat("Current Balance:", sprintf("%.2f\n", balance))
+    cat("Currency:", CURRENCY_CODES[accountCurrency], "\n\n")
 
     #input validation for negative values 
     while(TRUE){
@@ -175,11 +173,7 @@ withdrawAmount <- function(accountName, balance) {
     }
 
     newBalance <- balance - withdrawAmount
-    
-    cat("\n===\n")
-    cat("Withdraw Amount =", sprintf("%.2f", withdrawAmount), "\n")
     cat("Updated Balance =", sprintf("%.2f", newBalance), "\n")
-    cat("===\n\n")
     return(newBalance) # para maupdate balance sa main
 
 }
@@ -229,7 +223,7 @@ currencyExchange <- function(rates)
         }
         cat("\n")
 
-        cat("Exchanged Currency Options\n\n")
+        cat("Exchanged Currency Options:\n")
         cat("[1] Philippine Peso (PHP)\n")
         cat("[2] United States Dollar (USD)\n")
         cat("[3] Japanese Yen (JPY)\n")
@@ -275,22 +269,21 @@ currencyExchange <- function(rates)
         result <- inPhp / rates[target]
     }
 
+    cat(sprintf("Exchange Amount: %.2f\n\n", result))
+
     again <- askConvertAnother()
     }
 }
 
 recordExchange <- function(rates)
 {
-    cat("Record Exchange rate\n\n")
+    cat("\nRecord Exchange rate\n\n")
     cat("[1] Philippine Peso (PHP)\n")
     cat("[2] United States Dollar (USD)\n")
     cat("[3] Japanese Yen (JPY)\n")
     cat("[4] British Pound Sterling (GBP)\n")
     cat("[5] Euro (EUR)\n")
     cat("[6] Chinese Yuan Renminni (CNY)\n\n")
-
-    choice <- readline("Select Foreign Currency: ")
-    choice <- as.integer(choice)
 
     while(TRUE){
         choice <- readline("Select Foreign Currency: ")
@@ -311,7 +304,7 @@ recordExchange <- function(rates)
     }
 
         while(TRUE){
-            rate <- readline("Exchange rate ")
+            rate <- readline("Exchange rate: ")
             rate <- as.numeric(rate)
             if (is.na(rate)) {
                 cat("Invalid input. Please enter a number.\n\n")
