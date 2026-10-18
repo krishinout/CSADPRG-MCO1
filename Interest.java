@@ -20,10 +20,10 @@ public class Interest {
     }
 
     public List<DailyEntry> ExpectedDailyInterest(int days, double startBalance){
-        ArrayList<DailyEntry> entries = new ArrayList<>(); // creates the arrayList that stores each day entry
+        ArrayList<DailyEntry> entries = new ArrayList<>(); // creates the arrayList that stores each day entry / record 
         double newBalance = startBalance;
 
-        for(int i=0; i<n; i++){
+        for(int i=0; i < days; i++){
             double interest = dailyInterest(newBalance); // computes for interest and adds to new balance
             newBalance+=interest;
 
@@ -31,5 +31,5 @@ public class Interest {
         }
 
         return entries;
-    }
+    } 
 }

@@ -7,12 +7,13 @@
 public class Account{
     // Attributes
     private String accountName;
-    private double balance = 0.0;
+    private double balance;
     private Currency currency = Currency.PHP;
+    private Interest interest = new Interest();
 
-    public Account(String accountName, double balance){
+    public Account(String accountName){
         this.accountName = accountName;
-        this.balance = balance;
+        this.balance = 0.0;
     }
 
     // Setters and getters
@@ -44,7 +45,7 @@ public class Account{
     }
 
     // withdraw function
-    public boolean transact(double drawAmt){
+    public boolean withdraw(double drawAmt){
 
         if(drawAmt > this.balance){
             return false;
@@ -54,6 +55,17 @@ public class Account{
         return true;
     }
 
+    // interest computations
+    public List<Interest.DailyEntry> dailyInterest(int days){
+
+        return interest.ExpectedDailyInterest(days, balance);
+
+    }
+
+    public double computeAnnualInterest(){
+        return interest.annualInterest(balance);
+    }
 
 
-}
+
+} 

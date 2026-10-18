@@ -17,14 +17,9 @@ public class ExchangeRate {
      * Sets the rate for each currency, and only returns true when successful
      * Done for validation
      */
-    public boolean setRate(Currency currency, Double rate){
-        if (currency == null || currency == Currency.PHP || rate <= 0){
-            return false;
-        }
-
+    public void setRate(Currency currency, Double rate){
         // places in enum
         rates.put(currency, rate);
-        return true;
     }
 
     /**
@@ -41,9 +36,9 @@ public class ExchangeRate {
         double amountInPhp, convertedAmt;
 
         if(from == to){ // if base currency(PHP) return as is
-            return round(amount);
+            return amount;
         }
-
+ 
         // converts amount to php
         if(from == Currency.PHP){
             amountInPhp = amount;
@@ -58,11 +53,6 @@ public class ExchangeRate {
             convertedAmt = amountInPhp / rates.get(to);
         }
 
-        return round(convertedAmt);
-    }
-
-    // might remove since it rounds the values
-    private double round(double value) {
-        return Math.round(value * 100.0) / 100.0;
+        return convertedAmt;
     }
 }

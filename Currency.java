@@ -3,9 +3,9 @@ public enum Currency {
     // enum class where it has the full name, code, and indicator if base case
     PHP("Philippine Peso", "PHP", true),
     USD("United States Dollar", "USD", false),
-    JPY("Japanese Yen", "JYP", false),
+    JPY("Japanese Yen", "JPY", false),
     GBP("British Pound Sterling", "GBP", false),
-    EUR("EURO", "EUR", false),
+    EUR("Euro", "EUR", false),
     CNY("Chinese Yuan Renminni", "CNY", false);
 
     // attributes
@@ -32,3 +32,4 @@ public enum Currency {
         return isBase;
     }
 }
+ 
