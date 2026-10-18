@@ -8,6 +8,8 @@
 
 // ---------------------------------------
 // MAIN PROGRAM
+val currencyRates = doubleArrayOf(1.00, 62.00, 0.40, 84.00, 72.00, 9.00) // set default rates
+
 fun main()
 {
     var accountName = ""
@@ -28,6 +30,11 @@ fun main()
             5 -> recordExchange()
             else -> println("Error: Invalid choice")
         }
+
+        if (!backToMainMenu())
+        {
+            return // main ends
+        }
     }
 }
 
@@ -47,101 +54,147 @@ fun showMenu()
     print("\nChoice: ")
 }
 
+fun backToMainMenu(): Boolean
+{
+    while (true)
+    {
+        print("\nBack to the Main Menu (Y/N): ")
+        when (readln().trim().lowercase())
+        {
+            "y" -> return true
+            "n" -> return false
+            else -> println("Error: Please enter Y or N.")
+        }
+    }
+}
+
 fun registerAccount(): String
 {
     println("[REGISTER ACCOUNT NAME]")
-    print("Account Name: ")
-    val accountName = readln()
 
-    println("\n***")
-    println("Registered Account Name = ${accountName}")
-    println("***")
+    while (true)
+    {
+        print("Account Name: ")
+        val accountName = readln().trim()
 
-    return accountName
+        if (accountName.isEmpty())
+        {
+            println("Error: Account name cannot be empty.")
+            continue // skips the rest tapos goes back sa start ng loop
+        }
+
+        return accountName
+    }
 }
 
 fun depositAmount(accountName: String, balance: Double): Double
 {    
     println("[DEPOSIT AMOUNT]")
-    print("Account Name: ")
-    val depositAccountName = readln()
 
-    if (depositAccountName == accountName)
+    if (accountName.isEmpty())
     {
+        println("Error: Please register an account name first.")
+        return balance
+    }
+
+        println("Account Name: ${accountName}")
         println("Current Balance: ${balance}")
         println("Currency: PHP")
 
         print("\nDeposit Amount: ")
         val depositAmount = readln().toDouble()
         val newBalance = depositAmount + balance
-        
-        println("\n***")
-        println("Registered Account Name = ${accountName}")
-        println("Deposited Amount = ${depositAmount}")
-        println("Updated Balance = ${newBalance}")
-        println("***")
+
+        println("Updated Balance: ${newBalance}")
         return newBalance // para maupdate balance sa main
-    }
-
-    // to be added deposit validation (e.g., negative amount)
-
-    else
-    {
-        println("Error: Account name does not match records.")
-        return balance // no change sa balance
-    }
 }
 
 fun withdrawAmount(accountName: String, balance: Double): Double
 {    
     println("[WITHDRAW AMOUNT]")
-    print("Account Name: ")
-    val withdrawAccountName = readln()
 
-    if (withdrawAccountName == accountName)
+    if (accountName.isEmpty())
     {
+        println("Error: Please register an account name first.")
+        return balance
+    }
+
+        println("Account Name: ${accountName}")
         println("Current Balance: ${balance}")
         println("Currency: PHP")
 
         print("\nWithdraw Amount: ")
         val withdrawAmount = readln().toDouble()
         val newBalance = balance - withdrawAmount
-        
-        println("\n***")
-        println("Registered Account Name = ${accountName}")
-        println("Withdrawn Amount = ${withdrawAmount}")
-        println("Updated Balance = ${newBalance}")
-        println("***")
+
+        println("Updated Balance: ${newBalance}")
         return newBalance // para maupdate balance sa main
-    }
-
-    // to be added withdrawal validation (e.g., insufficient funds)
-
-    else
-    {
-        println("Error: Account name does not match records.")
-        return balance // no change sa balance
-    }
 }
 
 fun currencyExchange()
 {
-    println("[FOREIGN CURRENCY EXCHANGE]")
-    print("Source Amount (PHP): ")
-    val amount = readln().toDouble()
+    val currencyNames = arrayOf(
+        "Philippine Peso (PHP)",
+        "United States Dollar (USD)",
+        "Japanese Yen (JPY)",
+        "British Pound Sterling (GBP)",
+        "Euro (EUR)",
+        "Chinese Yuan Renminbi (CNY)"
+    )
 
-    println("\nExchanged Currency")
-    println("[1] Philippine Peso (PHP) = ${String.format("%.2f", 1 * amount)}")
-    println("[2] United States Dollar (USD) = ${String.format("%.2f", 62 * amount)}")
-    println("[3] Japanese Yen (JPY) = ${String.format("%.2f", 0.4 * amount)}")
-    println("[4] British Pound Sterling (GBP) = ${String.format("%.2f", 84 * amount)}")
-    println("[5] Euro (EUR) = ${String.format("%.2f", 72 * amount)}")
-    println("[6] Chinese Yuan Renminbi (CNY) = ${String.format("%.2f", 9 * amount)}")
+    while (true)
+    {
+        println("[FOREIGN CURRENCY EXCHANGE]")
+        println("Source Currency Option:")
+        println("[1] Philippine Peso (PHP)")
+        println("[2] United States Dollar (USD)")
+        println("[3] Japanese Yen (JPY)")
+        println("[4] British Pound Sterling (GBP)")
+        println("[5] Euro (EUR)")
+        println("[6] Chinese Yuan Renminbi (CNY)")
 
-    println("\n***")
-    println("Source Currency = Philippine Peso (PHP)")
-    println("Source Amount (PHP) = ${amount}")
-    println("***")
+        print("\nSource Currency: ")
+        val sourceCurrency = readln().toInt()
+        if (sourceCurrency !in 1..6)
+        {
+            println("Error: Invalid source currency.")
+            continue
+        }
+
+        print("Source Amount: ")
+        val sourceAmount = readln().toDouble()
+
+        println("\nExchanged Currency Options:")
+        println("[1] Philippine Peso (PHP)")
+        println("[2] United States Dollar (USD)")
+        println("[3] Japanese Yen (JPY)")
+        println("[4] British Pound Sterling (GBP)")
+        println("[5] Euro (EUR)")
+        println("[6] Chinese Yuan Renminbi (CNY)")
+
+        print("\nExchange Currency: ")
+        val exchangeCurrency = readln().toInt()
+        if (exchangeCurrency !in 1..6)
+        {
+            println("Error: Invalid exchange currency.")
+            continue
+        }
+
+        // formulas and values para sa exchange
+        val sourceName = currencyNames[sourceCurrency - 1]
+        val exchangeName = currencyNames[exchangeCurrency - 1]
+        val sourceRate = currencyRates[sourceCurrency - 1]
+        val exchangeRate = currencyRates[exchangeCurrency - 1]
+        val exchangeAmount = sourceAmount * sourceRate / exchangeRate // main output
+
+        println("Exchange Amount: ${String.format("%.2f", exchangeAmount)}")
+
+        print("\nConvert another currency (Y/N)? ")
+        if (readln().trim().lowercase() != "y")
+        {
+            return
+        }
+    }
 }
 
 fun recordExchange()
@@ -158,20 +211,13 @@ fun recordExchange()
     print("Select Foreign Currency: ")
     val choice = readln().toInt()
 
-    var rate = 1.00
-    when (choice)
+    if (choice !in 1..6)
     {
-        1 -> rate = rate
-        2 -> rate = 62.00
-        3 -> rate = 0.40
-        4 -> rate = 84.00
-        5 -> rate = 72.00
-        6 -> rate = 9.00
-        else -> println("Error: Invalid choice.")
+        println("Error: Invalid choice.")
+        return
     }
 
-    println("\n***")
-    println("Selected Foreign Currency = [${choice}]")
-    println("Exchange Rate: ${String.format("%.2f", rate)}")
-    println("***")
+    print("Exchange Rate: ")
+    val rate = readln().toDouble()
+    currencyRates[choice - 1] = rate // set the new exchange rate
 }
