@@ -30,6 +30,7 @@ main <- function(){
 
     while(TRUE)
     {
+        clearScreen()
         showMenu()
         choice <- readline("choice: ")
         choice <- as.integer(choice)
@@ -78,6 +79,12 @@ showMenu <- function(){
     cat("[4] Currency Exchange\n")
     cat("[5] Record Exchange Rates\n")
     cat("[6] Show Interest Amount\n")
+}
+
+# This function clears the console screen using ANSI escape codes.
+# It resets the cursor to the top-left and clears everything.
+clearScreen <- function() {
+  cat("\033[2J\033[H\n\n")
 }
 
 # This function asks the user if they want to return to the main menu.
