@@ -6,15 +6,19 @@
 #####################################
 
 # walang constants sa R so wag nlng baguhin pag naka caps
+
+
 MAX_NAME <- 100
 DEFAULT_BALANCE <- 1000.00
 ANNUAL_RATE <- 0.05
 MAX_DAYS <- 3650
 
+# contains the full names of each currency.
 CURRENCY_NAMES <- c(
   "Philippine Peso", "United States Dollar", "Japanese Yen",
   "British Pound Sterling", "Euro", "Chinese Yuan Renminni"
 )
+# contains the currency codes for each currency.
 CURRENCY_CODES <- c("PHP", "USD", "JPY", "GBP", "EUR", "CNY")
 
 # MAIN PROGRAM
@@ -64,6 +68,8 @@ main <- function(){
 
 #####################################
 # FUNCTIONS FOR CHOICES AND MAIN MENU
+
+# This function displays the main menu options to the user.
 showMenu <- function(){
     cat("Select Transaction:\n")
     cat("[1] Register Account Name\n")
@@ -74,7 +80,8 @@ showMenu <- function(){
     cat("[6] Show Interest Amount\n")
 }
 
-#This function asks the user if they want to return to the main menu.
+# This function asks the user if they want to return to the main menu.
+# @return (ans) The validated character entered by the user.
 askBackToMenu <- function() {
   while(TRUE) {
     ans <- readline("\nBack to the Main Menu (Y/N): ")
@@ -92,6 +99,7 @@ askBackToMenu <- function() {
 }
 
 # This function asks the user if they want to convert another currency.
+# @return (ans) The user's response (Y/N).
 askConvertAnother <- function() {
   while(TRUE) {
     ans <- readline("Convert another currency (Y/N)? ")
@@ -105,6 +113,10 @@ askConvertAnother <- function() {
 }
 }
 
+
+# This function prompts the user to input their account name.
+# It loops until a non-blank name is entered and stores it in the Account struct.
+# @return (accountName) The name of the account holder.
 registerAccount <- function(){
     cat("\nRegister Account Name\n")
     while(TRUE){
@@ -120,6 +132,13 @@ registerAccount <- function(){
     return(accountName)
 }
 
+
+# This function handles the deposit process.
+# It displays the current balance, takes a deposit amount, validates it, and updates the account balance.
+# @param accountName The name of the account holder.
+# @param balance The current balance of the account.
+# @param accountCurrency The index of the currency in CURRENCY_CODES
+# @return (newbalance) The updated balance after deposit.
 depositAmount <- function(accountName, balance, accountCurrency){
     cat("\nDeposit Amount\n")
     cat("Account Name:", accountName, "\n")
@@ -148,6 +167,14 @@ depositAmount <- function(accountName, balance, accountCurrency){
 
 }
 
+
+# This function handles the withdrawal process.
+# It displays the current balance, takes a withdrawal amount, validates it, checks for sufficient funds, 
+# and updates the account balance.
+# @param accountName The name of the account holder.
+# @param balance The current balance of the account.
+# @param accountCurrency The index of the currency in CURRENCY_CODES.
+# @return (newbalance) The updated balance after withdrawal.
 withdrawAmount <- function(accountName, balance, accountCurrency) {
     cat("\nWithdraw Amount\n")
     cat("Account Name:", accountName, "\n")
@@ -178,6 +205,10 @@ withdrawAmount <- function(accountName, balance, accountCurrency) {
 
 }
 
+
+# This function performs currency exchange calculations.
+# @param (rates) A numeric vector containing the exchange rates for each currency.
+# @return (void)
 currencyExchange <- function(rates)
 {
     again <- 'Y'
@@ -275,6 +306,10 @@ currencyExchange <- function(rates)
     }
 }
 
+
+# This function allows the user to record an exchange rate for a foreign currency.
+# @param (rates) A numeric vector containing the exchange rates for each currency.
+# @return (rates) The updated numeric vector containing the exchange rates for each currency.
 recordExchange <- function(rates)
 {
     cat("\nRecord Exchange rate\n\n")
@@ -322,6 +357,14 @@ recordExchange <- function(rates)
   return(rates)
 }
 
+#
+# This function calculates and displays the expected daily interest over N days.
+# It displays the current account details, takes the number of days, and prints
+# a formatted table showing the day, interest earned, and running balance.
+# @param accountName The name of the account holder.
+# @param balance The current balance of the account.
+# @param accountCurrency The index of the currency in CURRENCY_CODES.
+# @return (void)
 showInterestAmount <- function(accountName, balance, accountCurrency) {
   cat("Show Interest Amount\n")
   cat("Account Name:", accountName, "\n")
