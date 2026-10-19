@@ -349,8 +349,13 @@ public class MainMenu{
                     System.out.println("Error: Invalid Choice");
                 }
             }
+
+            if(willConvert){
+                clearScreen();
+            }
         }   
 
+        exit();
     }
 
     /**
