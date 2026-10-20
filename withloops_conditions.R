@@ -47,11 +47,10 @@ main <- function(){
             next
         }
 
-        # WALA ATANG SWITCH CASE SA R?? check q mmya..
         if(choice == 1){
             accountName <- registerAccount()
         } else if(choice == 2 ){
-            balance <- depositAmount(accountName, balance, accountCurrency)
+            balance <- depositAmount(accountName, balance, accountCurrency, rates)
         } else if(choice == 3){
             balance <- withdrawAmount(accountName, balance, accountCurrency)
         }else if(choice == 4){
@@ -146,29 +145,66 @@ registerAccount <- function(){
 # @param balance The current balance of the account.
 # @param accountCurrency The index of the currency in CURRENCY_CODES
 # @return (newbalance) The updated balance after deposit.
-depositAmount <- function(accountName, balance, accountCurrency){
+depositAmount <- function(accountName, balance, accountCurrency, rates){
     cat("\nDeposit Amount\n")
     cat("Account Name:", accountName, "\n")
     cat("Current Balance:", sprintf("%.2f\n", balance))
-    cat("Currency:", CURRENCY_CODES[accountCurrency], "\n\n")
+    cat("Deposit Currency Options:\n")
+    cat("[1] Philippine Peso (PHP)\n")
+    cat("[2] United States Dollar (USD)\n")
+    cat("[3] Japanese Yen (JPY)\n")
+    cat("[4] British Pound Sterling (GBP)\n")
+    cat("[5] Euro (EUR)\n")
+    cat("[6] Chinese Yuan Renminbi (CNY)\n")
 
-    #input validation for negative values 
+    # Validate the selected deposit currency.
     while(TRUE){
-        depositAmount <- readline("Deposit Amount: ")
-        depositAmount <- as.numeric(depositAmount)
-        if(is.na(depositAmount)){
-            cat("Error: Please enter a valid number.\n")
-        }
-        else if(depositAmount <= 0){
-            cat("Error: Cannot deposit negative number")
-        }
-        else{
+        depositCurrency <- readline("Select Deposit Currency: ")
+        depositCurrency <- as.numeric(depositCurrency)
+
+        if(is.na(depositCurrency) || depositCurrency != as.integer(depositCurrency)){
+            cat("Error: Please enter a valid whole number.\n")
+        } else if(depositCurrency < 1 || depositCurrency > 6){
+            cat("Error: Please select a currency from 1 to 6.\n")
+        } else {
+            depositCurrency <- as.integer(depositCurrency)
             break
         }
     }
-    
-    newBalance <- depositAmount + balance
-    cat("Updated Balance =", sprintf("%.2f", newBalance), "\n")
+
+    # Foreign currency rates must be recorded first
+    if(depositCurrency != 1 && rates[depositCurrency] == 0){
+        cat(sprintf("Rate for %s has not been recorded. Please record it first.\n", CURRENCY_CODES[depositCurrency]))
+        return(balance)
+    }
+
+    # input validation for negative values
+    while(TRUE){
+        depositAmount <- readline(sprintf("Deposit Amount (%s): ", CURRENCY_CODES[depositCurrency]))
+        depositAmount <- as.numeric(depositAmount)
+
+        if(is.na(depositAmount)){
+            cat("Error: Please enter a valid number.\n")
+        } else if(depositAmount <= 0){
+            cat("Error: Deposit amount must be greater than zero.\n")
+        } else {
+            break
+        }
+    }
+
+    # Convert  deposit to PHP before adding to the account balance
+    if(depositCurrency == 1){
+        amountInPHP <- depositAmount
+    } else {
+        amountInPHP <- depositAmount * rates[depositCurrency]
+    }
+
+    newBalance <- balance + amountInPHP
+    cat(sprintf("\nDeposit Amount: %.2f %s\n",
+                depositAmount, CURRENCY_CODES[depositCurrency]))
+    cat(sprintf("Converted Amount: %.2f PHP\n", amountInPHP))
+    cat(sprintf("Updated Balance: %.2f PHP\n", newBalance))
+
 
     return(newBalance) #para maupdate balance sa main
 
