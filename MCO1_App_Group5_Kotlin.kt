@@ -128,7 +128,29 @@ fun depositAmount(accountName: String, balance: Double): Double
 
         println("Account Name: ${accountName}")
         println("Current Balance: ${balance}")
-        println("Currency: PHP")
+        println("Deposit Currency Options:")
+        println("[1] Philippine Peso (PHP)")
+        println("[2] United States Dollar (USD)")
+        println("[3] Japanese Yen (JPY)")
+        println("[4] British Pound Sterling (GBP)")
+        println("[5] Euro (EUR)")
+        println("[6] Chinese Yuan Renminbi (CNY)")
+
+        val currencyChoice: Int
+        while (true)
+        {
+            print("\nDeposit Currency: ")
+            val choice = readln().trim().toIntOrNull()
+
+            if (choice !in 1..6)
+            {
+                println("Error: Invalid deposit currency.")
+                continue
+            }
+
+            currencyChoice = choice
+            break
+        }
 
         val depositAmount: Double
         while (true)
@@ -153,9 +175,32 @@ fun depositAmount(accountName: String, balance: Double): Double
             break
         }
 
-        val newBalance = depositAmount + balance
+        // initialize currency names and rates for conversion
+        val depositCurrencyNames = arrayOf("PHP", "USD", "JPY", "GBP", "EUR", "CNY")
 
-        println("Updated Balance: ${newBalance}")
+        val depositCurrency = depositCurrencyNames[currencyChoice - 1]
+        val depositRate = currencyRates[currencyChoice - 1]
+
+        
+        val phpRate = currencyRates[0]
+
+        if (depositRate == null)
+        {
+            println("Error: No valid exchange rate recorded for $depositCurrency.")
+            return balance
+        }
+
+        if (phpRate == null)
+        {
+            println("Error: No valid exchange rate recorded for PHP.")
+            return balance
+        }
+
+        val convertedAmount = depositAmount * depositRate / phpRate
+        val newBalance = convertedAmount + balance
+
+        println("Deposited Amount in PHP: ${String.format("%.2f", convertedAmount)}")
+        println("Updated Balance: ${String.format("%.2f", newBalance)} PHP")
         return newBalance // para maupdate balance sa main
 }
 
@@ -210,7 +255,7 @@ fun withdrawAmount(accountName: String, balance: Double): Double
 
         val newBalance = balance - withdrawAmount
 
-        println("Updated Balance: ${newBalance}")
+        println("Updated Balance: ${String.format("%.2f", newBalance)} PHP")
         return newBalance // para maupdate balance sa main
 }
 
@@ -317,18 +362,36 @@ fun recordExchange()
     println("[5] Euro (EUR)")
     println("[6] Chinese Yuan Renminni (CNY)\n")
 
-    print("Select Foreign Currency: ")
-    val choice = readln().toInt()
+    print("Select Currency: ")
+    val choice = readln().trim().toIntOrNull()
 
-    if (choice !in 1..6)
+    if (choice == null || choice !in 1..6)
     {
         println("Error: Invalid choice.")
         return
     }
 
-    print("Exchange Rate: ")
-    val rate = readln().toDouble()
-    currencyRates[choice - 1] = rate // set the new exchange rate
+    while (true)
+    {
+        print("Exchange Rate: ")
+        val rate = readln().trim().toDoubleOrNull()
+
+        if (rate == null)
+        {
+            println("Error: Exchange rate must be numerical.")
+            continue
+        }
+
+        if (!rate.isFinite() || rate <= 0)
+        {
+            println("Error: Exchange rate must be greater than zero.")
+            continue
+        }
+
+        currencyRates[choice - 1] = rate // set the new exchange rate
+        println("Exchange rate recorded successfully.")
+        return
+    }
 }
 
 /**
