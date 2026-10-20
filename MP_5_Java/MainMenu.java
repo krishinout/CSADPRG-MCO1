@@ -100,9 +100,10 @@ public class MainMenu{
     public void registerAccount(){
 
         String name;
+        System.out.println("Register Account Name");
+
         // Input validation of names.
         do { 
-            System.out.println("Register Account Name");
             System.out.print("Account Name: ");
             name = sc.nextLine().trim();
 
@@ -140,7 +141,7 @@ public class MainMenu{
 
     /** 
      * Simulates the deposit transaction.
-     * Reads amount and updates balance accordingly.
+     * Reads amount, exchanges currency, and updates balance accordingly.
      */
     public void depositAmount(){
 
@@ -153,11 +154,27 @@ public class MainMenu{
         System.out.println("Deposit Amount");
         System.out.println("Account Name: " + account.getAccountName());
         System.out.printf("Current Balance: %.2f\n", account.getBalance());
-        System.out.println("Currency: PHP");
         System.out.println();
 
+        Currency depCurrency = readCurrency("Currency (PHP/USD/JPY/GBP/EUR/CNY): ");
+
+        // error screen displayed if no currency is recorded yet
+        if(!exchangeRate.ifRateExists(depCurrency)){
+            System.out.println("Error: No exchange rate set for " + depCurrency.getCode());
+            System.out.println();
+            exit();
+            return;
+        }
+        
+        // conversion
         double depAmount = readAmount("Deposit Amount: ");
-        account.deposit(depAmount);
+        double amountInPhp = exchangeRate.convert(depAmount, depCurrency, Currency.PHP);
+        account.deposit(amountInPhp);
+        if(depCurrency != Currency.PHP){
+            System.out.printf("Converted: %.2f %s to %.2f PHP %n", depAmount, depCurrency.getCode(), amountInPhp);
+        }
+        System.out.println();
+
         System.out.printf("Updated Balance: %.2f\n", account.getBalance());
         System.out.println();
 
@@ -165,8 +182,35 @@ public class MainMenu{
     }
 
     /**
+     * Validating for the currency selected by user during deposit.
+     * @param prompt represents the prompt to be displayed to the user.
+     * @return the currency selected by the user.
+     */
+    public Currency readCurrency(String prompt){
+        while(true){
+            System.out.print(prompt);
+            String curr = sc.nextLine().trim().toUpperCase();
+
+            if(curr.isEmpty()){
+                System.out.println("Error: Invalid currency");
+                continue;
+            }
+
+            for(Currency c: Currency.values()){
+                if(c.getCode().equals(curr)){
+                    return c;
+                }
+            }
+
+            System.out.println("Error: Invalid currency. Please use PHP, USD, JPY, GBP, EUR, or CNY.");
+        }
+    }
+
+    /**
      * Validating for amount entered by user, continues to prompt until a numerical
      * and positive value is inputted.
+     * @param prompt represents the prompt to be displayed to the user.
+     * @return the valid positive amount to be transacted.
      */
     public double readAmount(String prompt){
         while(true){
@@ -323,7 +367,9 @@ public class MainMenu{
             Currency exchangeCurr = choiceToCurrency(c2);
 
              // Implementation of a checker in case no value is set to the chosen currency.
-            if(!exchangeRate.ifRateExists(sourceCurr)){
+            if(!exchangeRate.ifRateExists(sourceCurr) && !exchangeRate.ifRateExists(exchangeCurr)){
+                System.out.println("Error: No rate set for " + sourceCurr.getCode() + " and " + exchangeCurr.getCode());
+            } else if(!exchangeRate.ifRateExists(sourceCurr)){
                 System.out.println("Error: No rate set for " + sourceCurr.getCode());
             } else if(!exchangeRate.ifRateExists(exchangeCurr)){
                 System.out.println("Error: No rate set for " + exchangeCurr.getCode());
@@ -349,8 +395,13 @@ public class MainMenu{
                     System.out.println("Error: Invalid Choice");
                 }
             }
+
+            if(willConvert){
+                clearScreen();
+            }
         }   
 
+        exit();
     }
 
     /**
